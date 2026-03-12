@@ -146,6 +146,27 @@
   "tools": {
     "title": "Tools"
   },
+  "setupGuide": {
+    "title": "Welcome to Nanobot",
+    "description": "Complete the following setup to start using AI assistant features.",
+    "step1Title": "Configure Model Provider",
+    "step1Description": "Select and configure at least one AI model provider (e.g., OpenAI, Anthropic) and enter your API Key.",
+    "step2Title": "Configure Agent Settings",
+    "step2Description": "Choose the default provider and model to start chatting with AI assistant.",
+    "startSetup": "Start Setup",
+    "complete": "Complete",
+    "mustComplete": "Please complete the setup to continue",
+    "agentConfigRequired": "Please select provider and enter model name",
+    "setupComplete": "Setup complete! Welcome to Nanobot"
+  },
+  "providers": {
+    "configured": "Configured",
+    "notConfigured": "Not Configured",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Enter API Key",
+    "apiKeyRequired": "API Key is required",
+    "apiBase": "API Base URL"
+  },
   "mcp": {
     "title": "MCP Servers",
     "name": "Name",
@@ -236,6 +257,7 @@
     "title": "Agent Settings",
     "model": "Model",
     "provider": "Provider",
+    "selectProvider": "Select provider",
     "maxTokens": "Max Tokens",
     "temperature": "Temperature",
     "maxToolIterations": "Max Tool Iterations",
@@ -313,10 +335,13 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "save": "Save",
+    "saving": "Saving...",
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
     "close": "Close",
+    "back": "Back",
+    "next": "Next",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",

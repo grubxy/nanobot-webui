@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
+import { SetupGuideDialog } from "../shared/SetupGuideDialog";
 import { cn } from "../../lib/utils";
 
 export default function AppLayout() {
@@ -15,6 +16,7 @@ export default function AppLayout() {
       )}>
         <Outlet />
       </main>
+      <SetupGuideDialog />
     </div>
   );
 }

@@ -148,6 +148,27 @@
   "tools": {
     "title": "工具"
   },
+  "setupGuide": {
+    "title": "欢迎使用 Nanobot",
+    "description": "首次使用需要完成以下配置，才能开始使用 AI 助手功能。",
+    "step1Title": "配置模型提供商",
+    "step1Description": "选择并配置至少一个 AI 模型提供商（如 OpenAI、Anthropic 等），填入 API Key。",
+    "step2Title": "配置代理设置",
+    "step2Description": "选择默认使用的提供商和模型，开始与 AI 助手对话。",
+    "startSetup": "开始配置",
+    "complete": "完成",
+    "mustComplete": "请完成配置后再继续",
+    "agentConfigRequired": "请选择提供商和填写模型名称",
+    "setupComplete": "配置完成！欢迎使用 Nanobot"
+  },
+  "providers": {
+    "configured": "已配置",
+    "notConfigured": "未配置",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "请输入 API Key",
+    "apiKeyRequired": "请输入 API Key",
+    "apiBase": "API Base URL"
+  },
   "mcp": {
     "title": "MCP 服务器",
     "name": "名称",
@@ -238,6 +259,7 @@
     "title": "Agent 设置",
     "model": "模型",
     "provider": "提供商",
+    "selectProvider": "请选择提供商",
     "maxTokens": "最大 Token 数",
     "temperature": "温度",
     "maxToolIterations": "最大工具调用轮数",
@@ -315,10 +337,13 @@
     "confirm": "确认",
     "cancel": "取消",
     "save": "保存",
+    "saving": "保存中...",
     "delete": "删除",
     "edit": "编辑",
     "add": "添加",
     "close": "关闭",
+    "back": "返回",
+    "next": "下一步",
     "loading": "加载中...",
     "error": "发生错误",
     "success": "操作成功",
