@@ -82,7 +82,7 @@ def _make_provider(config):
 
 
 async def main(
-    web_port: int = 8080,
+    web_port: int = 18780,
     gateway_port: int | None = None,
     web_host: str = "0.0.0.0",
     workspace: str | None = None,
@@ -271,7 +271,7 @@ def main_cli() -> None:
         prog="nanobot-webui",
         description="nanobot WebUI — start WebUI + gateway in one process",
     )
-    parser.add_argument("--port", type=int, default=8080, help="WebUI port (default: 8080)")
+    parser.add_argument("--port", type=int, default=18780, help="WebUI port (default: 18780)")
     parser.add_argument("--gateway-port", type=int, default=None, dest="gateway_port",
                         help="nanobot gateway port (default: from config)")
     parser.add_argument("--host", default="0.0.0.0", help="Bind address (default: 0.0.0.0)")

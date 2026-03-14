@@ -25,7 +25,6 @@ import typer
 
 # ── Grab the canonical nanobot Typer app ─────────────────────────────────────
 from nanobot.cli.commands import app
-import nanobot.cli.commands as _nanobot_commands
 
 # ── Daemon / process-tracking helpers ────────────────────────────────────────
 
@@ -138,7 +137,7 @@ app.add_typer(webui_app, name="webui")
 @webui_app.callback(invoke_without_command=True)
 def webui(
     ctx: typer.Context,
-    port: int = typer.Option(8080, "--port", "-p", help="WebUI HTTP port (default: 8080)"),
+    port: int = typer.Option(18780, "--port", "-p", help="WebUI HTTP port (default: 18780)"),
     gateway_port: Optional[int] = typer.Option(
         None, "--gateway-port", "-g",
         help="nanobot gateway port (default: read from ~/.nanobot/config.json)",
@@ -406,7 +405,7 @@ def _make_standalone_parser():
         prog="nanobot-webui",
         description="nanobot WebUI — start WebUI + gateway in one process",
     )
-    p.add_argument("--port", type=int, default=8080, help="WebUI port (default: 8080)")
+    p.add_argument("--port", type=int, default=18780, help="WebUI port (default: 18780)")
     p.add_argument("--gateway-port", type=int, default=None, dest="gateway_port",
                    help="nanobot gateway port (default: from config)")
     p.add_argument("--host", default="0.0.0.0", help="Bind address (default: 0.0.0.0)")
