@@ -72,7 +72,8 @@
     "showToolMessages": "显示工具调用过程",
     "hideToolMessages": "隐藏工具调用过程",
     "uploading": "上传中...",
-    "uploadFailed": "上传失败"
+    "uploadFailed": "上传失败",
+    "searchSessions": "搜索会话..."
   },
   "providers": {
     "title": "模型提供商",

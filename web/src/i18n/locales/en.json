@@ -72,7 +72,8 @@
     "showToolMessages": "Show tool call details",
     "hideToolMessages": "Hide tool call details",
     "uploading": "Uploading...",
-    "uploadFailed": "Upload failed"
+    "uploadFailed": "Upload failed",
+    "searchSessions": "Search sessions..."
   },
   "providers": {
     "title": "Providers",

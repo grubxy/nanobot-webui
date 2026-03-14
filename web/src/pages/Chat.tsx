@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChatWindow } from "../components/chat/ChatWindow";
 import { useChatStore, type ChatMessage } from "../stores/chatStore";
@@ -7,8 +7,8 @@ import { useAuthStore } from "../stores/authStore";
 import { useDeleteSession } from "../hooks/useSessions";
 import { nanoid } from "nanoid";
 import { Button } from "../components/ui/button";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { Plus, Trash2 } from "lucide-react";
+import { Input } from "../components/ui/input";
+import { Plus, Search, Trash2 } from "lucide-react";
 import { cn, formatDate } from "../lib/utils";
 
 import { CHANNEL_ICONS } from "../lib/channelIcons";
@@ -87,6 +87,7 @@ export default function Chat() {
 
   const isAdmin = user?.role === "admin";
   const myPrefix = `web:${user?.id}:`;
+  const [search, setSearch] = useState("");
   // Admins see all sessions; regular users see only their own web sessions
   const mySessions = useMemo(
     () =>
@@ -116,10 +117,22 @@ export default function Chat() {
       currentSessionKey?.startsWith(myPrefix) &&
       !mySessions.some((s) => s.key === currentSessionKey);
     if (isLocalNew && currentSessionKey) {
-      return [{ key: currentSessionKey, updated_at: new Date().toISOString() }, ...mySessions];
+      return [{ key: currentSessionKey, updated_at: new Date().toISOString(), last_message: undefined }, ...mySessions];
     }
     return mySessions;
   }, [currentSessionKey, myPrefix, mySessions]);
+
+  // Filter sessions by search query (matches label or last message preview)
+  const filteredSessions = useMemo(() => {
+    if (!search.trim()) return displaySessions;
+    const q = search.toLowerCase();
+    return displaySessions.filter((s) => {
+      const parts = s.key.split(":");
+      const label = (parts[parts.length - 1] ?? s.key).toLowerCase();
+      const preview = (s.last_message ?? "").toLowerCase();
+      return label.includes(q) || preview.includes(q);
+    });
+  }, [displaySessions, search]);
 
   const newChat = () => {
     const hexId = Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) =>
@@ -138,16 +151,28 @@ export default function Chat() {
   return (
     <div className="flex h-full gap-4 p-5">
       {/* Session sidebar */}
-      <aside className="flex w-52 shrink-0 flex-col rounded-lg border bg-card overflow-hidden">
+      <aside className="flex w-52 min-w-0 shrink-0 flex-col rounded-lg border bg-card overflow-hidden" style={{width: '13rem', minWidth: 0, maxWidth: '13rem'}}>
         <div className="flex items-center justify-between border-b px-3 py-2">
           <span className="text-sm font-medium">{t("chat.sessions")}</span>
           <Button size="icon" variant="ghost" className="h-7 w-7" onClick={newChat}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        <ScrollArea className="flex-1">
-          <div className="space-y-0.5 p-1" style={{ width: '100%', maxWidth: '100%' }}>
-            {displaySessions.map((s) => {
+        {/* Search */}
+        <div className="px-2 py-1.5 border-b">
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground/60" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("chat.searchSessions")}
+              className="h-7 pl-6 text-xs"
+            />
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0" style={{width: '13rem', maxWidth: '13rem'}}>
+          <div className="space-y-0.5 p-1" style={{width: '100%', boxSizing: 'border-box', overflow: 'hidden'}}>
+            {filteredSessions.map((s) => {
               const channel = channelOf(s.key);
               const isWeb = channel === "web";
               const parts = s.key.split(":");
@@ -161,7 +186,7 @@ export default function Chat() {
                 <div
                   key={s.key}
                   className={cn(
-                    "group relative flex cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-xs transition-colors overflow-hidden",
+                    "group relative flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-xs transition-colors overflow-hidden",
                     active
                       ? "bg-primary text-primary-foreground"
                       : "hover:bg-muted/60"
@@ -179,14 +204,21 @@ export default function Chat() {
                   {/* Content */}
                   <div className="min-w-0 flex-1 overflow-hidden">
                     <span className="block truncate font-medium">{label}</span>
-                    <p
-                      className={cn(
+                    {s.last_message ? (
+                      <p className={cn(
                         "text-[10px] mt-0.5 truncate",
                         active ? "text-primary-foreground/60" : "text-muted-foreground"
-                      )}
-                    >
-                      {formatDate(s.updated_at)}
-                    </p>
+                      )}>
+                        {s.last_message}
+                      </p>
+                    ) : (
+                      <p className={cn(
+                        "text-[10px] mt-0.5 truncate",
+                        active ? "text-primary-foreground/60" : "text-muted-foreground"
+                      )}>
+                        {formatDate(s.updated_at)}
+                      </p>
+                    )}
                   </div>
 
                   {/* Delete */}
@@ -218,13 +250,13 @@ export default function Chat() {
                 </div>
               );
             })}
-            {displaySessions.length === 0 && (
+            {filteredSessions.length === 0 && (
               <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                {t("common.noData")}
+                {search.trim() ? t("common.noData") : t("common.noData")}
               </p>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </aside>
 
       {/* Chat area */}

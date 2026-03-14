@@ -72,7 +72,8 @@
     "showToolMessages": "ツール呼び出しを表示",
     "hideToolMessages": "ツール呼び出しを非表示",
     "uploading": "アップロード中...",
-    "uploadFailed": "アップロードに失敗しました"
+    "uploadFailed": "アップロードに失敗しました",
+    "searchSessions": "セッションを検索..."
   },
   "providers": {
     "title": "プロバイダー",

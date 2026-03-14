@@ -7,6 +7,7 @@ export interface SessionInfo {
   key: string;
   created_at: string;
   updated_at: string;
+  last_message?: string;
 }
 
 export interface MessageInfo {
