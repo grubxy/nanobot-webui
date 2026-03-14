@@ -11,6 +11,8 @@
     "settings": "Agents",
     "systemConfig": "System Config",
     "users": "Users",
+    "collapse": "Collapse menu",
+    "expand": "Expand menu",
     "section": {
       "general": "General",
       "admin": "Admin"

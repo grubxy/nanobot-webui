@@ -11,6 +11,8 @@
     "users": "用户",
     "cron": "定时任务",
     "systemConfig": "系统配置",
+    "collapse": "折叠菜单",
+    "expand": "展开菜单",
     "section": {
       "general": "通用",
       "admin": "管理"

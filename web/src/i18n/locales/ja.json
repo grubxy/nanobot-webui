@@ -11,6 +11,8 @@
     "users": "ユーザー",
     "cron": "定期タスク",
     "systemConfig": "システム設定",
+    "collapse": "メニューを折りたたむ",
+    "expand": "メニューを展開",
     "section": {
       "general": "一般",
       "admin": "管理"
