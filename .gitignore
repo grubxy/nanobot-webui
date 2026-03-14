@@ -22,3 +22,4 @@ dev-dist
 
 # PyPI 配置（包含敏感信息）
 .pypirc
+web/tsconfig.tsbuildinfo
