@@ -1,9 +1,12 @@
 """[Provider] patches — transparently support newer OpenAI API formats.
 
-Patch: OpenAICompatProvider.chat (nightly) / CustomProvider + LiteLLMProvider (legacy)
+Patch: OpenAICompatProvider.chat
     On the first call that returns an "unsupported legacy protocol" error the
     provider is transparently switched to /v1/responses.
     The decision is cached per api_base so subsequent calls skip the trial.
+
+Note: nanobot v0.1.4.post6 removed CustomProvider and LiteLLMProvider; all
+OpenAI-compatible endpoints (including "custom") now use OpenAICompatProvider.
 """
 
 from __future__ import annotations
@@ -14,7 +17,6 @@ def make_provider_patched(config):
     """
     Replicate and patch nanobot's _make_provider logic.
     - Adds support for custom providers from webui_config.json
-    - Fixes extra_headers and is_local omissions in older nanobot versions.
     """
     import sys
     from nanobot.providers.registry import find_by_name
@@ -23,40 +25,28 @@ def make_provider_patched(config):
     model: str = config.agents.defaults.model
     provider_name: str = config.get_provider_name(model)
     p = config.get_provider(model)
+    spec = find_by_name(provider_name) if provider_name else None
+    backend = spec.backend if spec else "openai_compat"
 
     # 1. Custom dynamically injected providers OR the built-in "custom" provider
     custom_providers = get_custom_providers()
     is_custom_dynamic = provider_name and provider_name in custom_providers
-    
-    if provider_name == "custom" or is_custom_dynamic:
-        from nanobot.providers.custom_provider import CustomProvider
-        import inspect
-        has_eh = "extra_headers" in inspect.signature(CustomProvider.__init__).parameters
-        
-        if has_eh:
-            kwargs = {"extra_headers": p.extra_headers if p else None}
-            return CustomProvider(
-                api_key=p.api_key if p else "no-key",
-                api_base=config.get_api_base(model) or "http://localhost:8000/v1",
-                default_model=model,
-                **kwargs,
-            )
-        else:
-            prov = CustomProvider(
-                api_key=p.api_key if p else "no-key",
-                api_base=config.get_api_base(model) or "http://localhost:8000/v1",
-                default_model=model,
-            )
-            if hasattr(p, "extra_headers") and p.extra_headers and hasattr(prov, "_client"):
-                # Avoid double AsyncOpenAI client instantiation by merging headers directly
-                prov._client._custom_headers = {**(prov._client._custom_headers or {}), **p.extra_headers}
-            return prov
 
-    if provider_name == "openai_codex" or model.startswith("openai-codex/"):
+    if provider_name == "custom" or is_custom_dynamic:
+        from nanobot.providers.openai_compat_provider import OpenAICompatProvider
+        return OpenAICompatProvider(
+            api_key=p.api_key if p else "no-key",
+            api_base=config.get_api_base(model) or "http://localhost:8000/v1",
+            default_model=model,
+            extra_headers=p.extra_headers if p else None,
+            spec=spec,
+        )
+
+    if backend == "openai_codex" or model.startswith("openai-codex/"):
         from nanobot.providers.openai_codex_provider import OpenAICodexProvider
         return OpenAICodexProvider(default_model=model)
 
-    if provider_name == "azure_openai":
+    if backend == "azure_openai":
         from nanobot.providers.azure_openai_provider import AzureOpenAIProvider
         if not p or not p.api_key or not p.api_base:
             print(
@@ -71,21 +61,32 @@ def make_provider_patched(config):
                 default_model=model,
             )
 
-    from nanobot.providers.litellm_provider import LiteLLMProvider
-    spec = find_by_name(provider_name)
-    if not model.startswith("bedrock/") and not (p and p.api_key) and not (spec and (spec.is_oauth or spec.is_local)):
+    if backend == "anthropic":
+        from nanobot.providers.anthropic_provider import AnthropicProvider
+        return AnthropicProvider(
+            api_key=p.api_key if p else None,
+            api_base=config.get_api_base(model),
+            default_model=model,
+            extra_headers=p.extra_headers if p else None,
+        )
+
+    # Default: openai_compat (covers all remaining providers including gateways/local)
+    from nanobot.providers.openai_compat_provider import OpenAICompatProvider
+    if not model.startswith("bedrock/") and not (p and p.api_key) and not (
+        spec and (spec.is_oauth or spec.is_local or spec.is_direct)
+    ):
         print(
             "Warning: No API key configured. "
             "Start the WebUI and set one in Settings → Providers.",
             file=sys.stderr,
         )
 
-    return LiteLLMProvider(
+    return OpenAICompatProvider(
         api_key=p.api_key if p else None,
         api_base=config.get_api_base(model),
         default_model=model,
         extra_headers=p.extra_headers if p else None,
-        provider_name=provider_name,
+        spec=spec,
     )
 
 
@@ -96,21 +97,11 @@ def apply() -> None:
     import httpx
     from nanobot.providers.base import LLMResponse, ToolCallRequest
 
-    # nightly uses OpenAICompatProvider; older versions use CustomProvider + LiteLLMProvider
+    # Since nanobot v0.1.4.post6, all OpenAI-compatible providers use OpenAICompatProvider.
     _provider_classes: list[type] = []
     try:
         from nanobot.providers.openai_compat_provider import OpenAICompatProvider
         _provider_classes.append(OpenAICompatProvider)
-    except ImportError:
-        pass
-    try:
-        from nanobot.providers.custom_provider import CustomProvider
-        _provider_classes.append(CustomProvider)
-    except ImportError:
-        pass
-    try:
-        from nanobot.providers.litellm_provider import LiteLLMProvider
-        _provider_classes.append(LiteLLMProvider)
     except ImportError:
         pass
 

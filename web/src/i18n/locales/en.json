@@ -118,7 +118,8 @@
       "slack": "Slack",
       "qq": "QQ",
       "matrix": "Matrix",
-      "mochat": "WeCom (MoChat)",
+      "mochat": "MoChat",
+      "wecom": "WeCom",
       "web": "Web"
     },
     "weixin": {
@@ -176,7 +177,9 @@
       "smtpPassword": "SMTP Password",
       "homeserver": "Homeserver",
       "userId": "User ID",
-      "deviceId": "Device ID"
+      "deviceId": "Device ID",
+      "botId": "Bot ID",
+      "welcomeMessage": "Welcome Message"
     }
   },
   "tools": {

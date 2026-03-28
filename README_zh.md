@@ -73,6 +73,12 @@
 pip install nanobot-webui
 ```
 
+> **从旧版本升级？** 请先卸载旧版本以避免冲突：
+> ```bash
+> pip uninstall -y nanobot-webui nanobot
+> pip install nanobot-webui
+> ```
+
 wheel 包内已内嵌编译好的 React 前端，**无需安装 Node.js**，安装后直接使用 `nanobot` 命令启动。
 
 ```bash
@@ -87,6 +93,21 @@ nanobot webui --daemon
 ```
 
 浏览器访问 **http://localhost:18780** - 默认账号：**admin / nanobot**，首次登录后请立即修改密码。
+
+---
+
+### uv 安装（推荐用于隔离环境）
+
+```bash
+uv tool install nanobot-webui
+```
+
+> **升级？**
+> ```bash
+> uv tool upgrade nanobot-webui
+> ```
+
+`uv tool install` 会将 `nanobot` 安装到 uv 自己管理的隔离虚拟环境（`~/.local/share/uv/tools/nanobot-webui/`），可执行文件自动链接到 `~/.local/bin/`，不会影响当前项目工作区或系统 Python 环境。启动方式、可用选项、默认端口与 pip 安装完全一致。
 
 ---
 
@@ -107,7 +128,6 @@ services:
       - ~/.nanobot:/root/.nanobot   # 配置与数据持久化
     ports:
       - "18780:18780"    # WebUI
-      - "18790:18790"  # nanobot 网关（可选，IM 通道 Webhook 回调用）
     restart: unless-stopped
 ```
 

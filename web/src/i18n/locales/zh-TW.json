@@ -118,7 +118,8 @@
       "slack": "Slack",
       "qq": "QQ",
       "matrix": "Matrix",
-      "mochat": "企業微信 (MoChat)",
+      "mochat": "MoChat",
+      "wecom": "企業微信",
       "web": "網頁"
     },
     "weixin": {
@@ -178,7 +179,9 @@
       "smtpPassword": "SMTP 密碼",
       "homeserver": "主伺服器",
       "userId": "使用者 ID",
-      "deviceId": "裝置 ID"
+      "deviceId": "裝置 ID",
+      "botId": "Bot ID",
+      "welcomeMessage": "歡迎訊息"
     }
   },
   "tools": {

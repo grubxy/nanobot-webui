@@ -74,6 +74,12 @@ Provides a full-featured UI to configure, converse with, and manage your nanobot
 pip install nanobot-webui
 ```
 
+> **Upgrading from an older version?** Uninstall both packages first to avoid conflicts:
+> ```bash
+> pip uninstall -y nanobot-webui nanobot
+> pip install nanobot-webui
+> ```
+
 The pre-built React frontend is bundled in the wheel — **no Node.js required**.  
 After installation, use the `nanobot` command to start the WebUI:
 
@@ -89,6 +95,21 @@ nanobot webui --daemon
 ```
 
 Open **http://localhost:18780** — default credentials: **admin / nanobot** — change on first login.
+
+---
+
+### uv (recommended for isolated environments)
+
+```bash
+uv tool install nanobot-webui
+```
+
+> **Upgrading?**
+> ```bash
+> uv tool upgrade nanobot-webui
+> ```
+
+`uv tool install` places the `nanobot` command into a uv-managed isolated virtual environment (`~/.local/share/uv/tools/nanobot-webui/`) and symlinks the executable to `~/.local/bin/` — completely separate from the current project environment and the system Python. Everything else (startup, options, default port) is identical to the pip path above.
 
 ---
 
@@ -109,7 +130,6 @@ services:
       - ~/.nanobot:/root/.nanobot   # config & data persistence
     ports:
       - "18780:18780"    # WebUI
-      - "18790:18790"  # nanobot gateway (optional, for IM channel webhooks)
     restart: unless-stopped
 ```
 
