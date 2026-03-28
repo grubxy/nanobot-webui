@@ -1,5 +1,29 @@
 # Release Notes
 
+## v0.2.5 — 2026-03-28
+
+**Custom AI Provider Management**
+- Support dynamic addition, configuration, and deletion of custom AI providers without restarting services
+- Automatically adapt to OpenAI-compatible interfaces (including API keys, Base URLs, and supported model lists)
+- Enhanced provider matching logic: inject custom providers into the `nanobot` core agent loop via patching mechanism
+- Frontend settings interface provides modals for provider creation, editing, and deletion, with synchronized i18n translations for 7 languages
+
+**Cron Jobs Enhancement**
+- **Session Isolation**: Each cron execution now has an independent session ID (`cron:{job_id}:{timestamp}`) to avoid history conflicts
+- **Execution Viewer Improvements**: Optimized timestamp parsing logic (compatible with ns/μs/ms precision), added content folding for long messages, and step-by-step status rendering
+- **API Fixes**: Synchronized with `nanobot` core library API changes, fixed 422 validation errors for job toggles, and migrated cron data storage to workspace-scoped paths
+
+**Message Rendering & UX Optimization**
+- **SubAgent Enhancement**: `MessageBubble` now better renders SubAgent tool call statuses and summary content
+- **JSON Editor Update**: Replaced textareas in `SystemConfig` page with CodeMirror JSON editor featuring syntax highlighting, folding, and inline diff highlighting
+- **Chat Input Fixes**: Optimized mobile input experience and enter-key submission logic in specific scenarios
+
+**System Compatibility & Patching**
+- Synchronized with latest `nanobot` nightly/main branch API changes (e.g., `_announce_result` replacing `_announce`)
+- Updated [Dockerfile](Dockerfile) version and cleaned up obsolete dependencies
+
+---
+
 ## v0.2.4 — 2026-03-24
 
 **Cron Jobs History**
