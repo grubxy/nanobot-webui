@@ -29,7 +29,7 @@ dist-wheel: build-web
 # ── Docker (single-platform, local) ───────────
 .PHONY: build
 build:
-	docker build -t $(IMAGE):$(TAG) .
+	docker build --build-arg VERSION=$(VERSION) -t $(IMAGE):$(TAG) .
 
 .PHONY: up
 up:
@@ -74,6 +74,7 @@ endif
 	@echo "Releasing version $(VERSION)..."
 	docker buildx build \
 		--platform $(PLATFORMS) \
+		--build-arg VERSION=$(VERSION) \
 		--tag $(IMAGE):$(VERSION) \
 		--tag $(IMAGE):latest \
 		--push \

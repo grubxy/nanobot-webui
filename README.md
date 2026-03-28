@@ -150,6 +150,40 @@ Open **http://localhost:18780** — default credentials: **admin / nanobot**.
 
 > **Data directory:** all config, sessions, and workspace files are stored in `~/.nanobot-webui` on the host (mapped to `/root/.nanobot` inside the container).
 
+#### Environment Variables
+
+All startup options can be configured via environment variables — useful for Docker Compose overrides:
+
+| Variable | Default | Description |
+|---|---|---|
+| `WEBUI_PORT` | `18780` | HTTP port |
+| `WEBUI_HOST` | `0.0.0.0` | Bind address |
+| `WEBUI_LOG_LEVEL` | `DEBUG` | Log level: `DEBUG` / `INFO` / `WARNING` / `ERROR` |
+| `WEBUI_WORKSPACE` | _(nanobot default)_ | Override workspace directory path |
+| `WEBUI_CONFIG` | _(nanobot default)_ | Path to `config.json` |
+| `WEBUI_ONLY` | — | Set to `true` to skip IM channels (use when nanobot runs separately via systemd) |
+
+Example `docker-compose.yml` with custom settings:
+
+```yaml
+services:
+  webui:
+    image: kangkang223/nanobot-webui:latest
+    container_name: nanobot-webui
+    environment:
+      - WEBUI_PORT=18780
+      - WEBUI_HOST=0.0.0.0
+      - WEBUI_LOG_LEVEL=INFO
+      # - WEBUI_WORKSPACE=/root/.nanobot/workspace
+      # - WEBUI_CONFIG=/root/.nanobot/config.json
+      # - WEBUI_ONLY=true
+    volumes:
+      - ~/.nanobot:/root/.nanobot
+    ports:
+      - "18780:18780"
+    restart: unless-stopped
+```
+
 #### Option 2 — Build from source
 
 ```bash
@@ -180,20 +214,6 @@ make restart      # docker compose restart
 make build        # build local single-arch image
 make release-dated  # build & push :YYYY-MM-DD + :latest (multi-arch)
 ```
-
----
-
-## WeChat Channel
-
-WeChat (微信) is supported via [iLink](https://ilink.dev) (requires an active iLink subscription). The channel implementation is based on [nanobot PR #2348](https://github.com/HKUDS/nanobot/pull/2348).
-
-1. **Log in (choose one)**
-   - **WebUI:** Open the **Channels** page → WeChat card → click **QR Login**
-   - **CLI (headless servers):** Run `nanobot channels login weixin` to print the QR code in the terminal
-2. **Enable** — The WebUI updates `~/.nanobot/config.json` automatically after login.
-
-> **Note:** Only one WeChat account can be bound at a time. Scanning a new QR code will replace the previous binding.
-> Sessions expire periodically — re-scan from the Channels page at any time, no restart needed.
 
 ---
 

@@ -148,6 +148,40 @@ docker compose down
 
 > **数据目录：** 所有配置、会话及工作区文件保存在宿主机的 `~/.nanobot-webui` 目录（映射到容器内的 `/root/.nanobot`）。
 
+#### 环境变量
+
+所有启动参数均可通过环境变量配置，便于在 Docker Compose 中灵活覆盖：
+
+| 环境变量 | 默认值 | 说明 |
+|---|---|---|
+| `WEBUI_PORT` | `18780` | HTTP 监听端口 |
+| `WEBUI_HOST` | `0.0.0.0` | 绑定地址 |
+| `WEBUI_LOG_LEVEL` | `DEBUG` | 日志级别：`DEBUG` / `INFO` / `WARNING` / `ERROR` |
+| `WEBUI_WORKSPACE` | _（nanobot 默认值）_ | 覆盖工作区目录路径 |
+| `WEBUI_CONFIG` | _（nanobot 默认值）_ | 指定 `config.json` 文件路径 |
+| `WEBUI_ONLY` | — | 设为 `true` 时跳过 IM 通道启动（用于 nanobot 已通过 systemd 等方式独立运行的场景） |
+
+`docker-compose.yml` 示例：
+
+```yaml
+services:
+  webui:
+    image: kangkang223/nanobot-webui:latest
+    container_name: nanobot-webui
+    environment:
+      - WEBUI_PORT=18780
+      - WEBUI_HOST=0.0.0.0
+      - WEBUI_LOG_LEVEL=INFO
+      # - WEBUI_WORKSPACE=/root/.nanobot/workspace
+      # - WEBUI_CONFIG=/root/.nanobot/config.json
+      # - WEBUI_ONLY=true
+    volumes:
+      - ~/.nanobot:/root/.nanobot
+    ports:
+      - "18780:18780"
+    restart: unless-stopped
+```
+
 #### 方式二 — 本地构建镜像
 
 ```bash
@@ -178,20 +212,6 @@ make restart        # docker compose restart
 make build          # 构建本地单架构镜像
 make release-dated  # 构建并推送 :YYYY-MM-DD + :latest（多架构）
 ```
-
----
-
-## 微信通道
-
-微信通道通过 [iLink](https://ilink.dev) 接入，需要有效的 iLink 订阅。通道实现来自 [nanobot PR #2348](https://github.com/HKUDS/nanobot/pull/2348)。
-
-1. **扫码登录（二选一）**
-   - **WebUI：** 进入 **通道** 页面 → 微信卡片 → 点击 **扫码登录**
-   - **命令行（无界面服务器）：** 运行 `nanobot channels login weixin`，在终端打印二维码后扫码
-2. **启用通道** — 登录后 WebUI 会自动更新 `~/.nanobot/config.json`。
-
-> **注意：** 微信目前仅支持绑定一个账号，再次扫码会覆盖之前的绑定。
-> 微信会话会定期失效，在通道页面重新扫码即可登录，无需重启服务。
 
 ---
 
