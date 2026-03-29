@@ -6,9 +6,13 @@ from __future__ import annotations
 def apply() -> None:
     """Patch 1: BaseChannel.is_allowed  — empty allow_from list → allow all (same as ["*"]).
     Patch 2: ChannelManager._validate_allow_from — no-op; WebUI manages this via UI.
-    Patch 3: ChannelManager._dispatch_outbound — _subagent_hint shares send_tool_hints switch.
-    Patch 4: DingTalkChannel.send() — rich card title for SubAgent results.
-    Patch 5: FeishuChannel.send() — indigo header card for SubAgent results.
+    Patch 3: DingTalkChannel.send() — rich card title for SubAgent results.
+    Patch 4: FeishuChannel.send() — indigo header card for SubAgent results.
+
+    Note: The old Patch 3 (_dispatch_outbound override) has been removed.
+    nanobot v0.1.4.post6 ships its own _dispatch_outbound with streaming delta
+    coalescing, per-send retry, and the same _tool_hint / send_tool_hints /
+    send_progress logic our patch used to add manually.
     """
     import asyncio
     import json
@@ -28,43 +32,7 @@ def apply() -> None:
     _base.BaseChannel.is_allowed = _is_allowed_patched  # type: ignore[method-assign]
     _manager.ChannelManager._validate_allow_from = lambda self: None  # type: ignore[method-assign]
 
-    # ── Patch 3: _dispatch_outbound — subagent hint shares send_tool_hints ───
-
-    async def _dispatch_outbound_patched(self) -> None:  # type: ignore[override]
-        logger.info("Outbound dispatcher started")
-        while True:
-            try:
-                msg = await asyncio.wait_for(
-                    self.bus.consume_outbound(),
-                    timeout=1.0,
-                )
-                if msg.metadata.get("_progress"):
-                    if msg.metadata.get("_subagent_hint") or msg.metadata.get("_tool_hint"):
-                        # SubAgent and main-agent tool-call hints — both controlled by send_tool_hints
-                        if not self.config.channels.send_tool_hints:
-                            continue
-                    else:
-                        # General progress messages
-                        if not self.config.channels.send_progress:
-                            continue
-
-                channel = self.channels.get(msg.channel)
-                if channel:
-                    try:
-                        await channel.send(msg)
-                    except Exception as e:
-                        logger.error("Error sending to {}: {}", msg.channel, e)
-                else:
-                    logger.warning("Unknown channel: {}", msg.channel)
-
-            except asyncio.TimeoutError:
-                continue
-            except asyncio.CancelledError:
-                break
-
-    _manager.ChannelManager._dispatch_outbound = _dispatch_outbound_patched  # type: ignore[method-assign]
-
-    # ── Patch 4: DingTalk — rich card title for SubAgent results ─────────────
+    # ── Patch 3: DingTalk — rich card title for SubAgent results ─────────────
 
     try:
         from nanobot.channels.dingtalk import DingTalkChannel

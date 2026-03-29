@@ -40,6 +40,7 @@ async def main(
     web_host: str = "0.0.0.0",
     workspace: str | None = None,
     log_level: str = "DEBUG",
+    webui_only: bool = False,
 ) -> None:
     import sys as _sys
     from loguru import logger
@@ -62,7 +63,16 @@ async def main(
     from webui.api.gateway import ServiceContainer, start_api_server
     from webui.patches.provider import make_provider_patched
 
+    from nanobot.config.loader import get_config_path, save_config
+
     config = load_config()
+
+    # Auto-initialize config on first run (equivalent to `nanobot onboard`).
+    # This ensures config.json and workspace templates exist before we start.
+    if not get_config_path().exists():
+        save_config(config)
+        logger.info("First run: created default config at {}", get_config_path())
+
     if workspace:
         config.agents.defaults.workspace = workspace
     sync_workspace_templates(config.workspace_path)
@@ -147,6 +157,7 @@ async def main(
 
     # --------------------------------------------------------------- channels
     channels = ExtendedChannelManager(config, bus)
+    channels.webui_only = webui_only
 
     def _pick_heartbeat_target() -> tuple[str, str]:
         enabled = set(channels.enabled_channels)
@@ -202,6 +213,7 @@ async def main(
         cron=cron,
         heartbeat=heartbeat,
         make_provider=make_provider_patched,
+        webui_only=webui_only,
     )
 
     if channels.enabled_channels:
@@ -209,25 +221,39 @@ async def main(
     else:
         logger.warning("No IM channels enabled")
 
+    if webui_only:
+        logger.info(
+            "WebUI-only mode: IM channels / heartbeat will NOT be started. "
+            "An external nanobot process is expected to handle IM traffic."
+        )
+
     logger.info("Starting nanobot webui on http://{}:{}", web_host, web_port)
 
     async def run() -> None:
         try:
             await cron.start()
-            await heartbeat.start()
-            await asyncio.gather(
-                agent.run(),
-                channels.start_all(),
-                start_api_server(container, host=web_host, port=web_port),
-            )
+            if webui_only:
+                await asyncio.gather(
+                    agent.run(),
+                    start_api_server(container, host=web_host, port=web_port),
+                )
+            else:
+                await heartbeat.start()
+                await asyncio.gather(
+                    agent.run(),
+                    channels.start_all(),
+                    start_api_server(container, host=web_host, port=web_port),
+                )
         except KeyboardInterrupt:
             logger.info("Shutting down…")
         finally:
             await agent.close_mcp()
-            heartbeat.stop()
+            if not webui_only:
+                heartbeat.stop()
             cron.stop()
             agent.stop()
-            await channels.stop_all()
+            if not webui_only:
+                await channels.stop_all()
 
     await run()
 
@@ -250,6 +276,10 @@ def main_cli() -> None:
     parser.add_argument("--log-level", default="DEBUG", dest="log_level",
                         metavar="LEVEL",
                         help="Log level: DEBUG, INFO, WARNING, ERROR (default: DEBUG)")
+    parser.add_argument("--webui-only", action="store_true", default=False,
+                        dest="webui_only",
+                        help="Start only the WebUI HTTP server (no IM channels / heartbeat). "
+                             "Use this when nanobot is already running as a separate process.")
     args = parser.parse_args()
 
     if args.daemon:
@@ -271,6 +301,7 @@ def main_cli() -> None:
         web_host=args.host,
         workspace=args.workspace,
         log_level=args.log_level,
+        webui_only=args.webui_only,
     ))
 
 

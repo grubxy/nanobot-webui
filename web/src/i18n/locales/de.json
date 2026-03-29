@@ -118,7 +118,8 @@
       "slack": "Slack",
       "qq": "QQ",
       "matrix": "Matrix",
-      "mochat": "WeCom (MoChat)",
+      "mochat": "MoChat",
+      "wecom": "WeCom",
       "web": "Web"
     },
     "weixin": {
@@ -178,7 +179,9 @@
       "smtpPassword": "SMTP-Passwort",
       "homeserver": "Heimserver",
       "userId": "Benutzer-ID",
-      "deviceId": "Geräte-ID"
+      "deviceId": "Geräte-ID",
+      "botId": "Bot-ID",
+      "welcomeMessage": "Willkommensnachricht"
     }
   },
   "tools": {
@@ -382,6 +385,11 @@
     "tabEditor": "Konfigurationseditor",
     "tabS3": "S3-Speicher",
     "tabBackup": "Backup & Wiederherstellung",
+    "tabLogs": "Systemprotokolle",
+    "searchLogs": "Protokolle suchen...",
+    "autoScroll": "Auto-Scroll",
+    "lines": "Zeilen",
+    "noLogs": "Keine Protokolle verfügbar.",
     "synced": "Synchronisiert",
     "format": "Formatieren",
     "formatted": "Formatiert",

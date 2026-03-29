@@ -21,7 +21,36 @@ class ExtendedChannelManager(ChannelManager):
       - update_config(new_config)        — update live config reference
       - reload_channel(name)             — gracefully restart one channel
       - reload_all(new_config)           — stop-all → update-config → start-all
+
+    In webui_only mode the IM channels are not started by this process;
+    get_status() derives ``running`` from the config's enabled state so the
+    dashboard reflects what the external nanobot gateway should be running.
     """
+
+    #: Set to True when webui is started with --webui-only.  Affects
+    #: get_status() so the dashboard isn't stuck at 0/N.
+    webui_only: bool = False
+
+    def get_status(self) -> dict:  # type: ignore[override]
+        """Return channel status dict.
+
+        In normal mode delegates to the parent (checks channel.is_running).
+        In webui_only mode the channels are managed by an external process, so
+        we derive ``running`` from whether the channel is enabled in config.
+        We iterate config directly (not self.channels) so channels that failed
+        to instantiate are still reported correctly.
+        """
+        if not self.webui_only:
+            return super().get_status()
+
+        result: dict = {}
+        for name, ch_dict in self.config.channels.model_dump().items():
+            # Skip non-channel scalar fields (send_progress, send_tool_hints, …)
+            if not isinstance(ch_dict, dict):
+                continue
+            if ch_dict.get("enabled", False):
+                result[name] = {"enabled": True, "running": True}
+        return result
 
     def update_config(self, new_config: Config) -> None:
         """Swap the config reference (does *not* restart any channels)."""

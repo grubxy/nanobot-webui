@@ -73,20 +73,41 @@
 pip install nanobot-webui
 ```
 
+> **从旧版本升级？** 请先卸载旧版本以避免冲突：
+> ```bash
+> pip uninstall -y nanobot-webui nanobot
+> pip install nanobot-webui
+> ```
+
 wheel 包内已内嵌编译好的 React 前端，**无需安装 Node.js**，安装后直接使用 `nanobot` 命令启动。
 
 ```bash
 # 前台启动（WebUI + nanobot 网关一体化）
-nanobot webui
+nanobot webui start
 
 # 指定端口
-nanobot webui --port 9090
+nanobot webui start --port 9090
 
 # 后台运行（推荐用于长期部署）
-nanobot webui --daemon
+nanobot webui start -d
 ```
 
 浏览器访问 **http://localhost:18780** - 默认账号：**admin / nanobot**，首次登录后请立即修改密码。
+
+---
+
+### uv 安装（推荐用于隔离环境）
+
+```bash
+uv tool install nanobot-webui
+```
+
+> **升级？**
+> ```bash
+> uv tool upgrade nanobot-webui
+> ```
+
+`uv tool install` 会将 `nanobot` 安装到 uv 自己管理的隔离虚拟环境（`~/.local/share/uv/tools/nanobot-webui/`），可执行文件自动链接到 `~/.local/bin/`，不会影响当前项目工作区或系统 Python 环境。启动方式、可用选项、默认端口与 pip 安装完全一致。
 
 ---
 
@@ -107,7 +128,6 @@ services:
       - ~/.nanobot:/root/.nanobot   # 配置与数据持久化
     ports:
       - "18780:18780"    # WebUI
-      - "18790:18790"  # nanobot 网关（可选，IM 通道 Webhook 回调用）
     restart: unless-stopped
 ```
 
@@ -127,6 +147,40 @@ docker compose down
 浏览器访问 **http://localhost:18780** — 默认账号：**admin / nanobot**，请在首次登录后立即修改密码。
 
 > **数据目录：** 所有配置、会话及工作区文件保存在宿主机的 `~/.nanobot-webui` 目录（映射到容器内的 `/root/.nanobot`）。
+
+#### 环境变量
+
+所有启动参数均可通过环境变量配置，便于在 Docker Compose 中灵活覆盖：
+
+| 环境变量 | 默认值 | 说明 |
+|---|---|---|
+| `WEBUI_PORT` | `18780` | HTTP 监听端口 |
+| `WEBUI_HOST` | `0.0.0.0` | 绑定地址 |
+| `WEBUI_LOG_LEVEL` | `DEBUG` | 日志级别：`DEBUG` / `INFO` / `WARNING` / `ERROR` |
+| `WEBUI_WORKSPACE` | _（nanobot 默认值）_ | 覆盖工作区目录路径 |
+| `WEBUI_CONFIG` | _（nanobot 默认值）_ | 指定 `config.json` 文件路径 |
+| `WEBUI_ONLY` | — | 设为 `true` 时跳过 IM 通道启动（用于 nanobot 已通过 systemd 等方式独立运行的场景） |
+
+`docker-compose.yml` 示例：
+
+```yaml
+services:
+  webui:
+    image: kangkang223/nanobot-webui:latest
+    container_name: nanobot-webui
+    environment:
+      - WEBUI_PORT=18780
+      - WEBUI_HOST=0.0.0.0
+      - WEBUI_LOG_LEVEL=INFO
+      # - WEBUI_WORKSPACE=/root/.nanobot/workspace
+      # - WEBUI_CONFIG=/root/.nanobot/config.json
+      # - WEBUI_ONLY=true
+    volumes:
+      - ~/.nanobot:/root/.nanobot
+    ports:
+      - "18780:18780"
+    restart: unless-stopped
+```
 
 #### 方式二 — 本地构建镜像
 
@@ -161,43 +215,56 @@ make release-dated  # 构建并推送 :YYYY-MM-DD + :latest（多架构）
 
 ---
 
-## 微信通道
-
-微信通道通过 [iLink](https://ilink.dev) 接入，需要有效的 iLink 订阅。通道实现来自 [nanobot PR #2348](https://github.com/HKUDS/nanobot/pull/2348)。
-
-1. **扫码登录（二选一）**
-   - **WebUI：** 进入 **通道** 页面 → 微信卡片 → 点击 **扫码登录**
-   - **命令行（无界面服务器）：** 运行 `nanobot channels login weixin`，在终端打印二维码后扫码
-2. **启用通道** — 登录后 WebUI 会自动更新 `~/.nanobot/config.json`。
-
-> **注意：** 微信目前仅支持绑定一个账号，再次扫码会覆盖之前的绑定。
-> 微信会话会定期失效，在通道页面重新扫码即可登录，无需重启服务。
-
----
-
 ## 命令行参考
 
-安装 `nanobot-webui` 后，`nanobot` 命令会新增以下子命令：
+安装 `nanobot-webui` 后，`nanobot` 命令会新增以下子命令（`nanobot webui --help` 可查看完整列表）：
 
-### `nanobot webui` — 启动 WebUI
+### `nanobot webui start` — 启动 WebUI
 
 ```
-用法: nanobot webui [OPTIONS] [COMMAND]
+用法: nanobot webui start [OPTIONS]
 
 选项:
-  -p, --port INTEGER        WebUI 端口（默认: 18780）
+  -p, --port INTEGER        HTTP 端口（默认: 18780）
       --host TEXT           绑定地址（默认: 0.0.0.0）
   -w, --workspace PATH      覆盖工作区目录
   -c, --config PATH         指定配置文件路径
-  -d, --daemon              后台运行，立即返回
+  -d, --daemon              后台运行（Daemon 模式）
+  -l, --log-level TEXT      日志级别: DEBUG / INFO / WARNING / ERROR（默认: DEBUG）
+      --webui-only          仅启动 WebUI HTTP 服务和 Agent（供 WebSocket 聊天使用），
+                            不启动 IM 通道和心跳服务。适用于 nanobot 已通过 systemd
+                            等方式独立运行的场景，避免两个进程争抢同一 IM 通道连接。
 ```
 
 ```bash
-nanobot webui                          # 前台启动（WebUI + 网关）
-nanobot webui --port 9090              # 自定义端口
-nanobot webui --daemon                 # 后台运行
-nanobot webui --daemon --port 9090     # 后台 + 自定义端口
-nanobot webui --workspace ~/myproject  # 指定工作区
+nanobot webui start                          # 前台启动（Ctrl-C 停止）
+nanobot webui start --port 9090              # 自定义端口
+nanobot webui start -d                       # 后台启动（推荐长期运行）
+nanobot webui start -d --port 9090           # 后台 + 自定义端口
+nanobot webui start --workspace ~/myproject  # 指定工作区
+nanobot webui start --webui-only             # 仅 WebUI，nanobot 由系统服务管理
+nanobot webui start -d --webui-only          # 后台 + 仅 WebUI 模式
+```
+
+浏览器访问 **http://localhost:18780** — 默认账号：**admin / nanobot**，首次登录后请立即修改密码。
+
+### `nanobot webui stop` — 停止后台服务
+
+```bash
+nanobot webui stop    # 发送 SIGTERM，6s 后强制 SIGKILL
+```
+
+### `nanobot webui status` — 查看服务状态
+
+```bash
+nanobot webui status  # 运行状态、PID、访问地址和日志路径
+```
+
+### `nanobot webui restart` — 重启后台服务
+
+```bash
+nanobot webui restart              # 停止后后台重启（复用当前端口）
+nanobot webui restart --port 9090  # 重启并切换端口
 ```
 
 ### `nanobot webui logs` — 查看日志
@@ -228,16 +295,8 @@ nanobot channels login weixin --force  # 强制重新登录（清除已保存的
 在终端打印 ASCII 二维码，用手机微信扫描完成登录。登录成功后将 Bot Token 保存到 `~/.nanobot/weixin/account.json`。
 
 > 适用于无界面服务器场景。WebUI 通道页面提供相同的登录流程，并显示图形二维码。
->
-> 向后兼容：`nanobot weixin login` 仍可使用，等同于 `nanobot channels login weixin`。
 
 ---
-
-### `nanobot stop` — 停止后台服务
-
-```bash
-nanobot stop    # 停止后台运行的 WebUI 进程（发送 SIGTERM，6s 后强制 SIGKILL）
-```
 
 ### `nanobot status` — 查看运行状态
 

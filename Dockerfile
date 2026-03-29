@@ -17,8 +17,12 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debia
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ uv
 
-ENV VERSION=0.2.5
-RUN uv pip install --system -i https://pypi.org/simple/ nanobot-webui==${VERSION}
+ARG VERSION=0.2.5
+RUN uv pip install --system -i https://mirrors.aliyun.com/pypi/simple/ nanobot-webui==${VERSION}
+
+COPY scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 18780
-CMD ["nanobot", "webui", "--port", "18780"]
+ENV WEBUI_VERSION=${VERSION}
+ENTRYPOINT ["docker-entrypoint.sh"]

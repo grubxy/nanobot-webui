@@ -74,21 +74,42 @@ Provides a full-featured UI to configure, converse with, and manage your nanobot
 pip install nanobot-webui
 ```
 
+> **Upgrading from an older version?** Uninstall both packages first to avoid conflicts:
+> ```bash
+> pip uninstall -y nanobot-webui nanobot
+> pip install nanobot-webui
+> ```
+
 The pre-built React frontend is bundled in the wheel — **no Node.js required**.  
 After installation, use the `nanobot` command to start the WebUI:
 
 ```bash
 # Foreground (WebUI + gateway combined)
-nanobot webui
+nanobot webui start
 
 # Custom port
-nanobot webui --port 9090
+nanobot webui start --port 9090
 
 # Background daemon (recommended for long-running deployments)
-nanobot webui --daemon
+nanobot webui start -d
 ```
 
 Open **http://localhost:18780** — default credentials: **admin / nanobot** — change on first login.
+
+---
+
+### uv (recommended for isolated environments)
+
+```bash
+uv tool install nanobot-webui
+```
+
+> **Upgrading?**
+> ```bash
+> uv tool upgrade nanobot-webui
+> ```
+
+`uv tool install` places the `nanobot` command into a uv-managed isolated virtual environment (`~/.local/share/uv/tools/nanobot-webui/`) and symlinks the executable to `~/.local/bin/` — completely separate from the current project environment and the system Python. Everything else (startup, options, default port) is identical to the pip path above.
 
 ---
 
@@ -109,7 +130,6 @@ services:
       - ~/.nanobot:/root/.nanobot   # config & data persistence
     ports:
       - "18780:18780"    # WebUI
-      - "18790:18790"  # nanobot gateway (optional, for IM channel webhooks)
     restart: unless-stopped
 ```
 
@@ -129,6 +149,40 @@ docker compose down
 Open **http://localhost:18780** — default credentials: **admin / nanobot**.
 
 > **Data directory:** all config, sessions, and workspace files are stored in `~/.nanobot-webui` on the host (mapped to `/root/.nanobot` inside the container).
+
+#### Environment Variables
+
+All startup options can be configured via environment variables — useful for Docker Compose overrides:
+
+| Variable | Default | Description |
+|---|---|---|
+| `WEBUI_PORT` | `18780` | HTTP port |
+| `WEBUI_HOST` | `0.0.0.0` | Bind address |
+| `WEBUI_LOG_LEVEL` | `DEBUG` | Log level: `DEBUG` / `INFO` / `WARNING` / `ERROR` |
+| `WEBUI_WORKSPACE` | _(nanobot default)_ | Override workspace directory path |
+| `WEBUI_CONFIG` | _(nanobot default)_ | Path to `config.json` |
+| `WEBUI_ONLY` | — | Set to `true` to skip IM channels (use when nanobot runs separately via systemd) |
+
+Example `docker-compose.yml` with custom settings:
+
+```yaml
+services:
+  webui:
+    image: kangkang223/nanobot-webui:latest
+    container_name: nanobot-webui
+    environment:
+      - WEBUI_PORT=18780
+      - WEBUI_HOST=0.0.0.0
+      - WEBUI_LOG_LEVEL=INFO
+      # - WEBUI_WORKSPACE=/root/.nanobot/workspace
+      # - WEBUI_CONFIG=/root/.nanobot/config.json
+      # - WEBUI_ONLY=true
+    volumes:
+      - ~/.nanobot:/root/.nanobot
+    ports:
+      - "18780:18780"
+    restart: unless-stopped
+```
 
 #### Option 2 — Build from source
 
@@ -163,43 +217,54 @@ make release-dated  # build & push :YYYY-MM-DD + :latest (multi-arch)
 
 ---
 
-## WeChat Channel
-
-WeChat (微信) is supported via [iLink](https://ilink.dev) (requires an active iLink subscription). The channel implementation is based on [nanobot PR #2348](https://github.com/HKUDS/nanobot/pull/2348).
-
-1. **Log in (choose one)**
-   - **WebUI:** Open the **Channels** page → WeChat card → click **QR Login**
-   - **CLI (headless servers):** Run `nanobot channels login weixin` to print the QR code in the terminal
-2. **Enable** — The WebUI updates `~/.nanobot/config.json` automatically after login.
-
-> **Note:** Only one WeChat account can be bound at a time. Scanning a new QR code will replace the previous binding.
-> Sessions expire periodically — re-scan from the Channels page at any time, no restart needed.
-
----
-
 ## CLI Reference
 
-Installing `nanobot-webui` extends the `nanobot` command with the following subcommands:
+Installing `nanobot-webui` extends the `nanobot` command with the following sub-commands (`nanobot webui --help` lists them all):
 
-### `nanobot webui` — Start the WebUI
+### `nanobot webui start` — Start the WebUI
 
 ```
-Usage: nanobot webui [OPTIONS] [COMMAND]
+Usage: nanobot webui start [OPTIONS]
 
 Options:
-  -p, --port INTEGER        WebUI HTTP port  (default: 18780)
-      --host TEXT           Bind address  (default: 0.0.0.0)
+  -p, --port INTEGER        HTTP port  [default: 18780]
+      --host TEXT           Bind address  [default: 0.0.0.0]
   -w, --workspace PATH      Override workspace directory
   -c, --config PATH         Path to config file
-  -d, --daemon              Run in background; return immediately
-```
+  -d, --daemon              Run in background (daemon mode)
+  -l, --log-level TEXT      DEBUG / INFO / WARNING / ERROR  [default: DEBUG]      --webui-only          Start only the WebUI HTTP server and agent (for WebSocket
+                            chat). IM channels and heartbeat are NOT started. Use this
+                            when nanobot is already managed by an external process
+                            (e.g. systemd) to avoid two processes competing for the
+                            same IM channel connections.```
 
 ```bash
-nanobot webui                          # foreground (WebUI + gateway)
-nanobot webui --port 9090              # custom port
-nanobot webui --daemon                 # background daemon
-nanobot webui --daemon --port 9090     # background + custom port
-nanobot webui --workspace ~/myproject  # override workspace
+nanobot webui start                          # foreground (Ctrl-C to stop)
+nanobot webui start --port 9090              # custom port
+nanobot webui start -d                       # background daemon
+nanobot webui start -d --port 9090           # background + custom port
+nanobot webui start --workspace ~/myproject  # override workspacenanobot webui start --webui-only             # WebUI only; nanobot managed externally
+nanobot webui start -d --webui-only          # Background + WebUI-only mode```
+
+Open **http://localhost:18780** — default credentials: **admin / nanobot** — change on first login.
+
+### `nanobot webui stop` — Stop the background service
+
+```bash
+nanobot webui stop    # sends SIGTERM; force-kills after 6 s if needed
+```
+
+### `nanobot webui status` — Show service status
+
+```bash
+nanobot webui status  # running state, PID, URL, log path
+```
+
+### `nanobot webui restart` — Restart the background service
+
+```bash
+nanobot webui restart              # stop + start in background (reuses current port)
+nanobot webui restart --port 9090  # restart on a new port
 ```
 
 ### `nanobot webui logs` — View logs
@@ -209,7 +274,7 @@ Usage: nanobot webui logs [OPTIONS]
 
 Options:
   -f, --follow          Stream log output in real time (like tail -f)
-  -n, --lines INTEGER   Number of lines to show  (default: 50)
+  -n, --lines INTEGER   Number of lines to show  [default: 50]
 ```
 
 ```bash
@@ -230,16 +295,8 @@ nanobot channels login weixin --force  # Force re-authentication (clear saved cr
 Prints an ASCII QR code in the terminal. Scan it with the WeChat mobile app to authenticate. On success, saves the bot token to `~/.nanobot/weixin/account.json`.
 
 > Use this on headless servers where a browser is not available. The WebUI Channels page provides the same login flow with a graphical QR code.
->
-> Backward compatible: `nanobot weixin login` still works as an alias for `nanobot channels login weixin`.
 
 ---
-
-### `nanobot stop` — Stop the background service
-
-```bash
-nanobot stop    # sends SIGTERM; force-kills after 6 s if needed
-```
 
 ### `nanobot status` — Show runtime status
 

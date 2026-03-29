@@ -118,7 +118,8 @@
       "slack": "Slack",
       "qq": "QQ",
       "matrix": "Matrix",
-      "mochat": "企业微信 (MoChat)",
+      "mochat": "MoChat",
+      "wecom": "企业微信",
       "web": "网页"
     },
     "weixin": {
@@ -178,7 +179,9 @@
       "smtpPassword": "SMTP 密码",
       "homeserver": "主服务器",
       "userId": "用户 ID",
-      "deviceId": "设备 ID"
+      "deviceId": "设备 ID",
+      "botId": "Bot ID",
+      "welcomeMessage": "欢迎消息"
     }
   },
   "tools": {
@@ -382,6 +385,11 @@
     "tabEditor": "配置编辑器",
     "tabS3": "S3 存储",
     "tabBackup": "备份与恢复",
+    "tabLogs": "系统日志",
+    "searchLogs": "搜索日志...",
+    "autoScroll": "自动滚动",
+    "lines": "行",
+    "noLogs": "暂无日志",
     "synced": "已同步",
     "format": "格式化",
     "formatted": "格式化完成",

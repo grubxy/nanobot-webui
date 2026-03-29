@@ -118,7 +118,8 @@
       "slack": "Slack",
       "qq": "QQ",
       "matrix": "Matrix",
-      "mochat": "WeCom (MoChat)",
+      "mochat": "MoChat",
+      "wecom": "WeCom",
       "web": "ウェブ"
     },
     "weixin": {
@@ -178,7 +179,9 @@
       "smtpPassword": "SMTPパスワード",
       "homeserver": "ホームサーバー",
       "userId": "ユーザーID",
-      "deviceId": "デバイスID"
+      "deviceId": "デバイスID",
+      "botId": "ボットID",
+      "welcomeMessage": "ウェルカムメッセージ"
     }
   },
   "tools": {
@@ -382,6 +385,11 @@
     "tabEditor": "設定エディタ",
     "tabS3": "S3ストレージ",
     "tabBackup": "バックアップと復元",
+    "tabLogs": "システムログ",
+    "searchLogs": "ログを検索...",
+    "autoScroll": "自動スクロール",
+    "lines": "行",
+    "noLogs": "ログはありません。",
     "synced": "同期済み",
     "format": "フォーマット",
     "formatted": "フォーマットが完了しました",

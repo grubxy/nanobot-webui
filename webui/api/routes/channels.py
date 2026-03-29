@@ -20,7 +20,7 @@ router = APIRouter()
 
 # weixin is first — it's the primary Chinese messaging channel
 _CHANNEL_NAMES = [
-    "weixin",
+    "weixin", "wecom",
     "telegram", "whatsapp", "discord", "feishu", "dingtalk",
     "email", "slack", "qq", "matrix", "mochat",
 ]
@@ -48,8 +48,13 @@ def _weixin_logged_in() -> bool:
 
 
 def _weixin_default_config() -> dict[str, Any]:
-    from webui.channels.weixin import WeixinConfig
+    from nanobot.channels.weixin import WeixinConfig
     return WeixinConfig().model_dump(by_alias=True)
+
+
+def _wecom_default_config() -> dict[str, Any]:
+    from nanobot.channels.wecom import WecomConfig
+    return WecomConfig().model_dump(by_alias=True)
 
 
 def _ilink_headers(*, auth_token: str | None = None) -> dict[str, str]:
@@ -82,6 +87,8 @@ def _channel_config_dict(name: str, svc: ServiceContainer) -> dict[str, Any]:
     if cfg is None:
         if name == "weixin":
             raw: dict[str, Any] = _weixin_default_config()
+        elif name == "wecom":
+            raw = _wecom_default_config()
         else:
             return {}
     else:
@@ -117,9 +124,6 @@ async def list_channels(
 
     for name in _CHANNEL_NAMES:
         ch_cfg = getattr(svc.config.channels, name, None)
-        # Always include weixin (show default config when not yet saved to nanobot.yaml)
-        if ch_cfg is None and name != "weixin":
-            continue
         running_info = status_map.get(name, {})
         result.append(
             ChannelStatus(
@@ -146,8 +150,12 @@ async def update_channel(
         if name == "weixin":
             # weixin may not be in config yet — bootstrap with defaults
             ch_cfg = _weixin_default_config()
+        elif name == "wecom":
+            # wecom may not be in config yet — bootstrap with defaults
+            ch_cfg = _wecom_default_config()
         else:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, f"Channel '{name}' not found")
+            # Bootstrap unknown channel with empty dict so it can be patched
+            ch_cfg = {}
 
     # Only update fields that are provided and don't contain mask placeholders.
     # Use by_alias=True (camelCase) so that merging camelCase payload keys from
