@@ -148,7 +148,41 @@ docker compose down
 
 Open **http://localhost:18780** — default credentials: **admin / nanobot**.
 
-> **Data directory:** all config, sessions, and workspace files are stored in `~/.nanobot-webui` on the host (mapped to `/root/.nanobot` inside the container).
+> **Data directory:** all config, sessions, and workspace files are stored in `~/.nanobot` on the host (mapped to `/root/.nanobot` inside the container).
+
+#### Environment Variables
+
+All startup options can be configured via environment variables — useful for Docker Compose overrides:
+
+| Variable | Default | Description |
+|---|---|---|
+| `WEBUI_PORT` | `18780` | HTTP port |
+| `WEBUI_HOST` | `0.0.0.0` | Bind address |
+| `WEBUI_LOG_LEVEL` | `DEBUG` | Log level: `DEBUG` / `INFO` / `WARNING` / `ERROR` |
+| `WEBUI_WORKSPACE` | _(nanobot default)_ | Override workspace directory path |
+| `WEBUI_CONFIG` | _(nanobot default)_ | Path to `config.json` |
+| `WEBUI_ONLY` | — | Set to `true` to skip IM channels (use when nanobot runs separately via systemd) |
+
+Example `docker-compose.yml` with custom settings:
+
+```yaml
+services:
+  webui:
+    image: kangkang223/nanobot-webui:latest
+    container_name: nanobot-webui
+    environment:
+      - WEBUI_PORT=18780
+      - WEBUI_HOST=0.0.0.0
+      - WEBUI_LOG_LEVEL=INFO
+      # - WEBUI_WORKSPACE=/root/.nanobot/workspace
+      # - WEBUI_CONFIG=/root/.nanobot/config.json
+      # - WEBUI_ONLY=true
+    volumes:
+      - ~/.nanobot:/root/.nanobot
+    ports:
+      - "18780:18780"
+    restart: unless-stopped
+```
 
 #### Environment Variables
 
