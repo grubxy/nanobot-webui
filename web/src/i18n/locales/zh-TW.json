@@ -188,7 +188,7 @@
     "title": "工具"
   },
   "setupGuide": {
-    "title": "歡迎使用 Nanobot",
+    "title": "歡迎使用 RedClawOps",
     "description": "首次使用請完成以下設定，以開始使用 AI 助理功能。",
     "step1Title": "設定模型供應商",
     "step1Description": "選擇並設定至少一個 AI 模型供應商（如 OpenAI、Anthropic 等），填入 API 金鑰。",
@@ -198,7 +198,7 @@
     "complete": "完成",
     "mustComplete": "請完成設定後再繼續",
     "agentConfigRequired": "請選擇供應商並填寫模型名稱",
-    "setupComplete": "設定完成！歡迎使用 Nanobot"
+    "setupComplete": "設定完成！歡迎使用 RedClawOps"
   },
   "mcp": {
     "title": "MCP 伺服器",

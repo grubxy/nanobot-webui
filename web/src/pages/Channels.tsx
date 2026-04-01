@@ -204,7 +204,7 @@ export default function Channels() {
                   >
                     <span className="text-xl leading-none">{icon}</span>
                     <div className="flex-1 min-w-0">
-                      <span className="font-medium">{t(`channels.names.${ch.name}`, { defaultValue: ch.name })}</span>
+                      <span className="font-medium text-foreground">{t(`channels.names.${ch.name}`, { defaultValue: ch.name })}</span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <StatusBadge running={ch.running} error={ch.error} />
@@ -258,7 +258,7 @@ export default function Channels() {
                         const isArray = Array.isArray(v);
                         return (
                           <div key={k} className="space-y-1">
-                            <Label className="text-xs text-muted-foreground">
+                            <Label className="text-xs text-foreground">
                               {t(`channels.fields.${k}`, { defaultValue: k })}
                             </Label>
                             {isBool ? (
@@ -266,7 +266,7 @@ export default function Channels() {
                                 value={draftVal}
                                 onValueChange={(val) => setDraft(ch.name, k, val)}
                               >
-                                <SelectTrigger className="text-sm">
+                                <SelectTrigger className="text-sm text-foreground">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>

@@ -560,7 +560,7 @@ function roleIcon(role: string) {
 function roleBgClass(role: string) {
   switch (role) {
     case "user":
-      return "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800";
+      return "bg-primary/10 dark:bg-primary/30 border-primary/20 dark:border-primary/40";
     case "assistant":
       return "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800";
     case "tool":

@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => set({ user: null, token: null }),
     }),
     {
-      name: "nanobot-auth",
+      name: "redclawops-auth",
     }
   )
 );

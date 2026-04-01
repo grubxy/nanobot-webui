@@ -20,13 +20,16 @@ export default function AppLayout() {
 
   return (
     <div
-      className="flex overflow-hidden bg-background"
+      className="flex overflow-hidden relative"
       // position: fixed anchors the app to the screen, so iOS page-scroll
       // triggered by keyboard can't displace the layout.
       // --vvh (set by useIOSInputFix) shrinks the height to the area above the
       // keyboard so the chat input always sits at the keyboard edge.
       style={{ position: "fixed", top: 0, left: 0, right: 0, height: "var(--vvh, 100dvh)" }}
     >
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-muted to-background pointer-events-none"></div>
+      
       {/* Sidebar: desktop only */}
       {!isMobile && (
         <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />

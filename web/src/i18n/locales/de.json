@@ -188,7 +188,7 @@
     "title": "Werkzeuge"
   },
   "setupGuide": {
-    "title": "Willkommen bei Nanobot",
+    "title": "Willkommen bei RedClawOps",
     "description": "Schließen Sie die folgende Einrichtung ab, um die KI-Assistentenfunktionen zu nutzen.",
     "step1Title": "Modellanbieter konfigurieren",
     "step1Description": "Wählen und konfigurieren Sie mindestens einen KI-Modellanbieter (z.B. OpenAI, Anthropic) und geben Sie Ihren API-Schlüssel ein.",
@@ -198,7 +198,7 @@
     "complete": "Abschließen",
     "mustComplete": "Bitte schließen Sie die Einrichtung ab, um fortzufahren",
     "agentConfigRequired": "Bitte Anbieter auswählen und Modellnamen eingeben",
-    "setupComplete": "Einrichtung abgeschlossen! Willkommen bei Nanobot"
+    "setupComplete": "Einrichtung abgeschlossen! Willkommen bei RedClawOps"
   },
   "mcp": {
     "title": "MCP-Server",

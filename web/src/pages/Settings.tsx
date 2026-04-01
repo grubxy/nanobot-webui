@@ -239,16 +239,16 @@ function ProvidersTab() {
               <CardContent className="space-y-3 pt-0 pb-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-1">
-                    <Label className="text-xs">{t("providers.apiKey")}</Label>
+                    <Label className="text-xs text-foreground">{t("providers.apiKey")}</Label>
                     <SecretInput value={apiKey} onChange={(v) => setDraft(p.name, "api_key", v)} placeholder="sk-..." />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">{t("providers.apiBase")} ({t("common.optional")})</Label>
+                    <Label className="text-xs text-foreground">{t("providers.apiBase")} ({t("common.optional")})</Label>
                     <Input value={apiBase} onChange={(e) => setDraft(p.name, "api_base", e.target.value)}
                       placeholder={getProviderDefaultBaseUrl(p.name) || "https://api.example.com/v1"} className="text-sm" />
                   </div>
                   <div className="space-y-1 sm:col-span-2">
-                    <Label className="text-xs">{t("providers.extraHeaders")} ({t("common.optional")})</Label>
+                    <Label className="text-xs text-foreground">{t("providers.extraHeaders")} ({t("common.optional")})</Label>
                     <Textarea
                       value={extraHeaders}
                       onChange={(e) => setDraft(p.name, "extra_headers", e.target.value)}
@@ -398,7 +398,7 @@ function AgentTab() {
             <>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <Label>{t("settings.provider")}</Label>
+                  <Label className="text-foreground">{t("settings.provider")}</Label>
                   <Select value={provider} onValueChange={(v) => {
                     setProvider(v);
                     // [AI:START] tool=copilot date=2026-03-12 author=chenweikang
@@ -415,7 +415,7 @@ function AgentTab() {
                 </div>
                 {/* [AI:START] tool=copilot date=2026-03-12 author=chenweikang */}
                 <div className="space-y-1">
-                  <Label>{t("settings.model")}</Label>
+                  <Label className="text-foreground">{t("settings.model")}</Label>
                   {selectedProviderModels.length > 0 ? (
                     <Select value={model} onValueChange={setModel}>
                       <SelectTrigger>
@@ -433,23 +433,23 @@ function AgentTab() {
                 </div>
                 {/* [AI:END] */}
                 <div className="space-y-1">
-                  <Label>{t("settings.maxTokens")}</Label>
+                  <Label className="text-foreground">{t("settings.maxTokens")}</Label>
                   <Input type="number" value={maxTokens} onChange={(e) => setMaxTokens(e.target.value)} />
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.temperature")}</Label>
+                  <Label className="text-foreground">{t("settings.temperature")}</Label>
                   <Input type="number" step="0.1" min="0" max="2" value={temperature} onChange={(e) => setTemperature(e.target.value)} />
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.maxToolIterations")}</Label>
+                  <Label className="text-foreground">{t("settings.maxToolIterations")}</Label>
                   <Input type="number" value={maxToolIter} onChange={(e) => setMaxToolIter(e.target.value)} />
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.contextWindowTokens")}</Label>
+                  <Label className="text-foreground">{t("settings.contextWindowTokens")}</Label>
                   <Input type="number" value={memoryWindow} onChange={(e) => setMemoryWindow(e.target.value)} />
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.reasoningEffort")}</Label>
+                  <Label className="text-foreground">{t("settings.reasoningEffort")}</Label>
                   <Select value={reasoningEffort} onValueChange={setReasoningEffort}>
                     <SelectTrigger><SelectValue placeholder="— default —" /></SelectTrigger>
                     <SelectContent>
@@ -460,7 +460,7 @@ function AgentTab() {
                   </Select>
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.workspace")}</Label>
+                  <Label className="text-foreground">{t("settings.workspace")}</Label>
                   <Input value={workspace} onChange={(e) => setWorkspace(e.target.value)} />
                 </div>
               </div>
@@ -493,11 +493,11 @@ function AgentTab() {
             <>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <Label>{t("settings.host")}</Label>
+                  <Label className="text-foreground">{t("settings.host")}</Label>
                   <Input value={host} onChange={(e) => setHost(e.target.value)} placeholder="0.0.0.0" />
                 </div>
                 <div className="space-y-1">
-                  <Label>{t("settings.port")}</Label>
+                  <Label className="text-foreground">{t("settings.port")}</Label>
                   <Input type="number" value={port} onChange={(e) => setPort(e.target.value)} />
                 </div>
               </div>
@@ -507,7 +507,7 @@ function AgentTab() {
               </div>
               {heartbeatEnabled && (
                 <div className="space-y-1 max-w-xs">
-                  <Label>{t("settings.heartbeatInterval")}</Label>
+                  <Label className="text-foreground">{t("settings.heartbeatInterval")}</Label>
                   <Input type="number" value={heartbeatInterval} onChange={(e) => setHeartbeatInterval(e.target.value)} />
                 </div>
               )}

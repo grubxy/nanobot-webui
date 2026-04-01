@@ -129,7 +129,7 @@ export function ChatInput({
     <div className="px-4 pb-4 pt-2">
       <div className="w-full">
         <div className={cn(
-          "relative flex flex-col rounded-2xl border bg-background/90 backdrop-blur-xl shadow-lg transition-all",
+          "relative flex flex-col rounded-2xl border backdrop-blur-xl shadow-lg transition-all dark:bg-card/90 dark:border-border light:bg-card light:border-border",
           isWaiting ? "border-primary/40" : "focus-within:border-primary/60 focus-within:shadow-xl"
         )}>
           {/* Attachment chips */}
@@ -140,22 +140,22 @@ export function ChatInput({
                 return (
                   <div
                     key={att.id}
-                    className="flex items-center gap-1.5 rounded-lg border bg-muted/60 px-2.5 py-1 text-xs"
+                    className="flex items-center gap-1.5 rounded-lg border border-primary/20 px-2.5 py-1 text-xs dark:bg-muted/60 dark:text-primary-foreground light:bg-primary/10 light:text-primary"
                   >
                     {att.uploading ? (
-                      <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                      <Loader2 className="h-3 w-3 animate-spin text-primary" />
                     ) : isImage ? (
                       <ImageIcon className="h-3 w-3 text-primary" />
                     ) : (
                       <FileText className="h-3 w-3 text-primary" />
                     )}
-                    <span className="max-w-[140px] truncate text-muted-foreground">
+                    <span className="max-w-[140px] truncate text-primary/70">
                       {att.uploading ? t("chat.uploading") : att.name}
                     </span>
                     {!att.uploading && (
                       <button
                         onClick={() => removeAttachment(att.id)}
-                        className="ml-0.5 rounded-sm text-muted-foreground hover:text-foreground"
+                        className="ml-0.5 rounded-sm text-primary/50 hover:text-primary"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -174,15 +174,15 @@ export function ChatInput({
             onPaste={handlePaste}
             placeholder={t("chat.placeholder")}
             rows={1}
-            className="resize-none border-0 bg-transparent px-4 py-3.5 shadow-none focus-visible:ring-0 text-base leading-relaxed w-full"
+            className="resize-none border-0 bg-transparent px-4 py-3.5 shadow-none focus-visible:ring-0 text-base leading-relaxed w-full dark:text-primary-foreground dark:placeholder:text-primary/40 light:text-foreground light:placeholder:text-muted-foreground"
             disabled={!isWaiting && disabled}
           />
           <div className="flex items-center justify-between px-3 pb-2">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-xs text-primary/60">
               {isConnected ? (
-                <Wifi className="h-3 w-3 text-green-500" />
+                <Wifi className="h-3 w-3 text-emerald-400" />
               ) : (
-                <WifiOff className="h-3 w-3 text-destructive" />
+                <WifiOff className="h-3 w-3 text-red-400" />
               )}
               <span>{isConnected ? t("chat.connected") : t("chat.disconnected")}</span>
 
@@ -190,7 +190,7 @@ export function ChatInput({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 ml-1"
+                className="h-6 w-6 ml-1 dark:text-white/50 dark:hover:text-white dark:hover:bg-muted/60 light:text-foreground/50 light:hover:text-foreground light:hover:bg-muted/60"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isWaiting}
                 title={t("chat.uploadAttachment")}
@@ -204,7 +204,7 @@ export function ChatInput({
                 className={`h-6 w-6 transition-colors ${
                   showToolMessages
                     ? "text-primary"
-                    : "text-muted-foreground/40 hover:text-muted-foreground"
+                    : "dark:text-white/40 dark:hover:text-white light:text-foreground/40 light:hover:text-foreground"
                 }`}
                 onClick={onToggleToolMessages}
                 title={showToolMessages ? t("chat.hideToolMessages") : t("chat.showToolMessages")}
@@ -223,7 +223,7 @@ export function ChatInput({
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-primary/50">
                 {isWaiting ? "" : t("chat.hint")}
               </span>
               {isWaiting ? (
@@ -231,7 +231,7 @@ export function ChatInput({
                   size="sm"
                   variant="destructive"
                   onClick={onStop}
-                  className="h-8 gap-1.5 rounded-xl px-3"
+                  className="h-8 gap-1.5 rounded-xl px-3 bg-red-500/80 hover:bg-red-500 border border-red-400/30"
                 >
                   <Square className="h-3.5 w-3.5" />
                   {t("chat.stop")}
@@ -241,7 +241,7 @@ export function ChatInput({
                   size="sm"
                   onClick={handleSend}
                   disabled={!canSend || disabled}
-                  className="h-8 gap-1.5 rounded-xl px-3"
+                  className="h-8 gap-1.5 rounded-xl px-3 bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white font-semibold shadow-lg shadow-primary/20"
                 >
                   <Send className="h-3.5 w-3.5" />
                   {t("chat.send")}

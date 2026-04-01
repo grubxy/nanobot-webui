@@ -134,7 +134,7 @@ export const useChatStore = create<ChatState>()(
       },
     }),
     {
-      name: "nanobot-chat",
+      name: "redclawops-chat",
       partialize: (state) => ({
         currentSessionKey: state.currentSessionKey,
         messages: state.messages,

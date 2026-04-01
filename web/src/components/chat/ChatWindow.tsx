@@ -239,12 +239,12 @@ export function ChatWindow() {
       <div ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 py-6">
         {messages.length === 0 ? (
           <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-5">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/15 shadow-inner">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-lg shadow-primary/10">
               <span className="text-3xl text-primary select-none leading-none">✦</span>
             </div>
             <div className="text-center space-y-1.5">
-              <p className="font-semibold text-foreground/90">Nanobot</p>
-              <p className="text-sm text-muted-foreground">{t("chat.noMessages")}</p>
+              <p className="font-semibold text-foreground">RedClawOps</p>
+              <p className="text-sm text-primary/60">{t("chat.noMessages")}</p>
             </div>
           </div>
         ) : (
@@ -260,16 +260,16 @@ export function ChatWindow() {
         )}
         {isWaiting && progressText && (
           <div className="mt-4 flex items-start gap-3 px-4">
-            <div className="flex h-8 w-8 shrink-0 overflow-hidden rounded-full shadow-sm">
-              <img src="/icon.png" alt="Nanobot" className="h-8 w-8 object-cover mix-blend-multiply dark:mix-blend-screen dark:brightness-150" />
+            <div className="flex h-8 w-8 shrink-0 overflow-hidden rounded-lg border border-accent/30 shadow-sm">
+              <img src="/icon.png" alt="RedClawOps" className="h-8 w-8 object-cover" />
             </div>
-            <div className="rounded-2xl rounded-tl-sm bg-muted px-4 py-2.5 text-sm text-muted-foreground flex items-center gap-2">
+            <div className="rounded-2xl rounded-tl-sm bg-card/80 border border-accent/20 px-4 py-2.5 text-sm text-foreground/80 flex items-center gap-2 backdrop-blur-sm">
               <span className="flex gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:0ms]" />
-                <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:150ms]" />
-                <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:300ms]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce [animation-delay:0ms]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce [animation-delay:150ms]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce [animation-delay:300ms]" />
               </span>
-              <span className="truncate max-w-xs">{progressText}</span>
+              <span className="truncate max-w-xs text-foreground">{progressText}</span>
             </div>
           </div>
         )}

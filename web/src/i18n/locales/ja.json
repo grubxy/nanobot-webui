@@ -188,7 +188,7 @@
     "title": "ツール"
   },
   "setupGuide": {
-    "title": "Nanobot へようこそ",
+    "title": "RedClawOps へようこそ",
     "description": "AI アシスタント機能を使用するには、以下の設定を完了してください。",
     "step1Title": "モデルプロバイダーの設定",
     "step1Description": "少なくとも 1 つの AI モデルプロバイダー（OpenAI、Anthropic など）を選択し、API キーを入力してください。",
@@ -198,7 +198,7 @@
     "complete": "完了",
     "mustComplete": "続行するには設定を完了してください",
     "agentConfigRequired": "プロバイダーを選択し、モデル名を入力してください",
-    "setupComplete": "設定完了！Nanobot へようこそ"
+    "setupComplete": "設定完了！RedClawOps へようこそ"
   },
   "mcp": {
     "title": "MCPサーバー",

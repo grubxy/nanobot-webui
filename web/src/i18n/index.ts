@@ -15,7 +15,7 @@ const SUPPORTED_LANGS = ["zh", "zh-TW", "en", "ja", "ko", "de", "fr"] as const;
 // 根据浏览器语言或时区自动检测语言
 const detectLanguage = (): string => {
   // 首先检查localStorage中是否有保存的语言设置
-  const savedLang = localStorage.getItem("nanobot-lang");
+  const savedLang = localStorage.getItem("redclawops-lang");
   if (savedLang && (SUPPORTED_LANGS as readonly string[]).includes(savedLang)) {
     return savedLang;
   }
@@ -79,7 +79,7 @@ i18n
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"],
-      lookupLocalStorage: "nanobot-lang",
+      lookupLocalStorage: "redclawops-lang",
     },
     interpolation: {
       escapeValue: false,

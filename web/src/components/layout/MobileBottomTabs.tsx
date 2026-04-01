@@ -38,14 +38,17 @@ export function MobileBottomTabs() {
 
   const TAB_CLS =
     "flex flex-col items-center justify-center gap-0.5 flex-1 py-2 text-[10px] font-medium transition-colors";
-  const ACTIVE_CLS = "text-primary";
+  const ACTIVE_CLS = "text-accent";
   const INACTIVE_CLS = "text-muted-foreground";
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 flex bg-background/85 backdrop-blur-xl"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)", boxShadow: "var(--shadow-up)" }}
+      className="fixed bottom-0 left-0 right-0 z-40 flex bg-background/95 backdrop-blur-xl border-t border-accent/20"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
+      {/* Top glow line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
+      
       {/* Dashboard */}
       <Link
         to="/dashboard"
@@ -81,19 +84,22 @@ export function MobileBottomTabs() {
             </button>
           </DialogPrimitive.Trigger>
           <DialogPrimitive.Portal>
-            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
             <DialogPrimitive.Content
-              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl border-t bg-background shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom duration-300"
+              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-background/95 backdrop-blur-xl border-t border-accent/30 shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom duration-300"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
+              {/* Top glow line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
+              
               {/* Drag handle */}
-              <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-muted-foreground/30" />
+              <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-accent/30" />
               {/* Title row */}
               <div className="flex items-center justify-between px-5 py-3">
-                <DialogPrimitive.Title className="text-sm font-semibold">
+                <DialogPrimitive.Title className="text-sm font-semibold text-foreground">
                   {t("nav.section.admin")}
                 </DialogPrimitive.Title>
-                <DialogPrimitive.Close className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/80">
+                <DialogPrimitive.Close className="flex h-7 w-7 items-center justify-center rounded-full bg-card text-accent hover:bg-border">
                   <X className="h-4 w-4" />
                 </DialogPrimitive.Close>
               </div>
@@ -108,14 +114,14 @@ export function MobileBottomTabs() {
                         to={item.path}
                         className={cn(
                           "flex flex-col items-center justify-center gap-1.5 py-4 text-xs font-medium transition-colors",
-                          active ? "text-primary" : "text-muted-foreground"
+                          active ? "text-accent" : "text-muted-foreground"
                         )}
                       >
                         <div className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-2xl",
-                          active ? "bg-primary/10" : "bg-muted"
+                          "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+                          active ? "bg-accent/20 border border-accent/30" : "bg-card/80"
                         )}>
-                          <Icon className={cn("h-5 w-5", active && "text-primary")} />
+                          <Icon className={cn("h-5 w-5", active && "text-accent")} />
                         </div>
                         <span>{t(item.label)}</span>
                       </Link>

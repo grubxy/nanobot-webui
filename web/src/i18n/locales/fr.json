@@ -188,7 +188,7 @@
     "title": "Outils"
   },
   "setupGuide": {
-    "title": "Bienvenue sur Nanobot",
+    "title": "Bienvenue sur RedClawOps",
     "description": "Complétez la configuration suivante pour commencer à utiliser les fonctionnalités de l'assistant IA.",
     "step1Title": "Configurer le fournisseur de modèle",
     "step1Description": "Sélectionnez et configurez au moins un fournisseur de modèle IA (ex. OpenAI, Anthropic) et entrez votre clé API.",
@@ -198,7 +198,7 @@
     "complete": "Terminer",
     "mustComplete": "Veuillez compléter la configuration pour continuer",
     "agentConfigRequired": "Veuillez sélectionner un fournisseur et entrer un nom de modèle",
-    "setupComplete": "Configuration terminée ! Bienvenue sur Nanobot"
+    "setupComplete": "Configuration terminée ! Bienvenue sur RedClawOps"
   },
   "mcp": {
     "title": "Serveurs MCP",

@@ -115,29 +115,33 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex h-full flex-col transition-[width] duration-300 ease-in-out overflow-hidden",
+        "flex h-full flex-col transition-[width] duration-300 ease-in-out overflow-hidden relative",
         collapsed ? "w-14" : "w-48"
       )}
       style={{
         width: collapsed ? undefined : "202px",
-        background: "hsl(var(--sidebar-bg))",
+        background: "linear-gradient(180deg, hsl(var(--sidebar-bg)) 0%, hsl(220 40% 6%) 100%)",
         boxShadow: "var(--sidebar-edge-shadow)",
       }}
     >
+      
       {/* Logo + collapse toggle */}
       <div className={cn(
-        "group flex h-12 shrink-0 items-center",
+        "group flex h-12 shrink-0 items-center relative",
         collapsed ? "justify-center px-1" : "justify-between pl-4 pr-2"
       )}>
+        {/* Bottom glow line */}
+        <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+        
         {!collapsed && (
-          <img src="/logo.png" alt="Nanobot" className="h-18 max-w-[140px] w-auto object-contain object-left mix-blend-multiply dark:mix-blend-normal dark:brightness-90" />
+          <img src="/logo.png" alt="RedClawOps" className="h-18 max-w-[140px] w-auto object-contain object-left" />
         )}
         <button
           onClick={onToggle}
           title={collapsed ? t("nav.expand") : t("nav.collapse")}
           className={cn(
             "flex h-7 w-7 items-center justify-center rounded-md transition-all duration-200",
-            "text-[hsl(var(--sidebar-muted))] hover:bg-[hsl(var(--sidebar-hover-bg))] hover:text-[hsl(var(--sidebar-fg))]",
+            "text-accent/50 hover:text-accent hover:bg-border/60",
             "opacity-0 group-hover:opacity-100",
             collapsed && "opacity-100"
           )}
@@ -154,8 +158,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <div className="mb-2">
           {!collapsed && (
             <p
-              className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "hsl(var(--sidebar-section-label))" }}
+              className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-primary/50"
             >
               {t("nav.section.general")}
             </p>
@@ -169,11 +172,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
         {/* Admin section */}
         {isAdmin && (
-          <div className={cn("mt-4", collapsed && "border-t border-[hsl(var(--sidebar-border))] pt-2")}>
+          <div className={cn("mt-4", collapsed && "border-t border-border/50 pt-2")}>
             {!collapsed && (
               <p
-                className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: "hsl(var(--sidebar-section-label))" }}
+                className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
               >
                 {t("nav.section.admin")}
               </p>
@@ -189,45 +191,47 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Bottom: user + theme toggle */}
       <div
-        className="shrink-0 pb-3"
-        style={{ borderTop: "1px solid hsl(var(--sidebar-border))" }}
+        className="shrink-0 pb-3 relative"
       >
+        {/* Top glow line */}
+        <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent"></div>
+        
         {collapsed ? (
           <div className="mt-2 flex flex-col items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   title={user?.username}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 hover:bg-primary/25 transition-colors"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border border-border hover:border-accent/50 hover:from-primary/30 hover:to-accent/30 transition-all"
                 >
-                  <span className="text-xs font-bold text-primary">
+                  <span className="text-xs font-bold text-accent">
                     {user?.username?.[0]?.toUpperCase() ?? "?"}
                   </span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-48">
+              <DropdownMenuContent side="right" align="end" className="w-48 bg-card/95 border-border backdrop-blur-xl">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger className="text-foreground hover:bg-border focus:bg-border">
                     <Languages className="mr-2 h-4 w-4" />{currentLangLabel}
                   </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
+                  <DropdownMenuSubContent className="bg-card/95 border-border backdrop-blur-xl">
                     {Object.entries(LANG_LABELS).map(([code, label]) => (
                       <DropdownMenuItem
                         key={code}
                         onClick={() => i18n.changeLanguage(code)}
-                        className={i18n.language === code ? "font-semibold text-primary" : ""}
+                        className={i18n.language === code ? "font-semibold text-primary bg-border/60" : "text-foreground hover:bg-border focus:bg-border"}
                       >
                         {label}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setShowChangePwd(true)}>
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem onClick={() => setShowChangePwd(true)} className="text-foreground hover:bg-border focus:bg-border">
                   <KeyRound className="mr-2 h-4 w-4" />{t("auth.changePassword")}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={clearAuth} className="text-destructive focus:text-destructive">
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem onClick={clearAuth} className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10">
                   <LogOut className="mr-2 h-4 w-4" />{t("auth.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -237,7 +241,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               title={resolvedTheme === "dark" ? t("common.lightMode") : t("common.darkMode")}
               className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-md transition-colors",
-                "text-[hsl(var(--sidebar-muted))] hover:bg-[hsl(var(--sidebar-hover-bg))] hover:text-[hsl(var(--sidebar-fg))]"
+                "text-muted-foreground hover:text-foreground hover:bg-border/60"
               )}
             >
               {resolvedTheme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
@@ -249,37 +253,37 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               <DropdownMenuTrigger asChild>
                 <button className={cn(
                   "flex min-w-0 flex-1 items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200",
-                  "text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-hover-bg))]"
+                  "text-foreground hover:bg-border/60 border border-transparent hover:border-border/30"
                 )}>
-                  <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-[9px] font-bold text-white">
                     {user?.username?.[0]?.toUpperCase() ?? "?"}
                   </div>
                   <span className="flex-1 truncate text-left">{user?.username}</span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="end" className="w-48">
+              <DropdownMenuContent side="right" align="end" className="w-48 bg-card/95 border-border backdrop-blur-xl">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger className="text-foreground hover:bg-border focus:bg-border">
                     <Languages className="mr-2 h-4 w-4" />{currentLangLabel}
                   </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
+                  <DropdownMenuSubContent className="bg-card/95 border-border backdrop-blur-xl">
                     {Object.entries(LANG_LABELS).map(([code, label]) => (
                       <DropdownMenuItem
                         key={code}
                         onClick={() => i18n.changeLanguage(code)}
-                        className={i18n.language === code ? "font-semibold text-primary" : ""}
+                        className={i18n.language === code ? "font-semibold text-primary bg-border/60" : "text-foreground hover:bg-border focus:bg-border"}
                       >
                         {label}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setShowChangePwd(true)}>
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem onClick={() => setShowChangePwd(true)} className="text-foreground hover:bg-border focus:bg-border">
                   <KeyRound className="mr-2 h-4 w-4" />{t("auth.changePassword")}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={clearAuth} className="text-destructive focus:text-destructive">
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem onClick={clearAuth} className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10">
                   <LogOut className="mr-2 h-4 w-4" />{t("auth.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -289,7 +293,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               title={resolvedTheme === "dark" ? t("common.lightMode") : t("common.darkMode")}
               className={cn(
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors",
-                "text-[hsl(var(--sidebar-muted))] hover:bg-[hsl(var(--sidebar-hover-bg))] hover:text-[hsl(var(--sidebar-fg))]"
+                "text-muted-foreground hover:text-foreground hover:bg-border/60"
               )}
             >
               {resolvedTheme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}

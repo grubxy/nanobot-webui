@@ -27,84 +27,95 @@ body {
 
 @layer base {
   :root {
-    /* === Light Theme — Nanobot orange palette === */
-    --background: 36 30% 97%;
-    --foreground: 20 30% 12%;
-    --card: 36 25% 99%;
-    --card-foreground: 20 30% 12%;
-    --popover: 36 25% 99%;
-    --popover-foreground: 20 30% 12%;
-    /* Warm orange — from logo "nano" text */
-    --primary: 24 90% 50%;
+    /* === Dark Theme — New Color Scheme === */
+    --background: 240 30% 7%; /* 深背景 */
+    --foreground: 240 23% 94%; /* 主要文字 */
+    --card: 240 29% 13%; /* 卡片底 */
+    --card-foreground: 240 23% 94%; /* 主要文字 */
+    --popover: 240 29% 13%; /* 卡片底 */
+    --popover-foreground: 240 23% 94%; /* 主要文字 */
+    /* Main colors */
+    --primary: 214 100% 50%; /* 主色：#0078FF */
     --primary-foreground: 0 0% 100%;
-    --secondary: 34 25% 92%;
-    --secondary-foreground: 20 28% 20%;
-    --muted: 34 25% 92%;
-    --muted-foreground: 20 14% 48%;
-    --accent: 24 90% 94%;
-    --accent-foreground: 24 80% 30%;
-    --destructive: 0 84% 58%;
+    --secondary: 214 100% 40%; /* 深蓝 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 20% 20%;
+    --muted-foreground: 240 10% 65%; /* 次要文字 */
+    --accent: 214 100% 60%; /* 亮蓝：#3399FF */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 30 18% 91%;
-    --input: 30 22% 86%;
-    --ring: 24 90% 50%;
+    --border: 240 25% 19%; /* 分割线 */
+    --input: 240 20% 20%;
+    --ring: 214 100% 50%; /* 主色：#0078FF */
     --radius: 0.5rem;
-    /* Sidebar — warm white, orange-tinted actives */
-    --sidebar-bg: 36 30% 99%;
-    --sidebar-fg: 20 28% 18%;
-    --sidebar-muted: 20 14% 52%;
-    --sidebar-active-bg: 24 90% 93%;
-    --sidebar-active-fg: 24 75% 32%;
-    --sidebar-hover-bg: 34 25% 94%;
-    --sidebar-border: 30 22% 88%;
-    --sidebar-section-label: 20 14% 52%;
-    --sidebar-edge-shadow: 3px 0 20px rgba(120, 60, 0, 0.07);
-    --sidebar-glass-opacity: 0.88;
-    /* Glass shadows — directional soft shadows replace hard borders */
-    --shadow-up:    0 -6px 24px rgba(100,60,10,0.07), 0 -1px 4px rgba(100,60,10,0.04);
-    --shadow-down:  0  6px 24px rgba(100,60,10,0.07), 0  1px 4px rgba(100,60,10,0.04);
-    --shadow-right: 6px 0  24px rgba(100,60,10,0.06), 1px 0  4px rgba(100,60,10,0.03);
-    --shadow-card:  0  2px 12px rgba(100,60,10,0.06), 0  1px  3px rgba(100,60,10,0.04);
+    /* Sidebar */
+    --sidebar-bg: 240 35% 8%;
+    --sidebar-fg: 240 23% 94%; /* 主要文字 */
+    --sidebar-muted: 240 10% 65%; /* 次要文字 */
+    --sidebar-active-bg: 214 90% 25%;
+    --sidebar-active-fg: 0 0% 100%;
+    --sidebar-hover-bg: 240 30% 12%;
+    --sidebar-border: 240 25% 19%; /* 分割线 */
+    --sidebar-section-label: 240 10% 65%; /* 次要文字 */
+    --sidebar-edge-shadow: 3px 0 20px rgba(0, 0, 0, 0.5);
+    --sidebar-glass-opacity: 0.95;
+    /* Glass shadows */
+    --shadow-up:    0 -6px 24px rgba(0, 0, 0, 0.4), 0 -1px 4px rgba(0, 0, 0, 0.3);
+    --shadow-down:  0  6px 24px rgba(0, 0, 0, 0.4), 0  1px 4px rgba(0, 0, 0, 0.3);
+    --shadow-right: 6px 0  24px rgba(0, 0, 0, 0.45), 1px 0  4px rgba(0, 0, 0, 0.3);
+    --shadow-card:  0  2px 16px rgba(0, 0, 0, 0.35), 0  1px  4px rgba(0, 0, 0, 0.25);
+    /* Status colors */
+    --success: 160 100% 45%; /* 成功绿：#00C48C */
+    --warning: 25 100% 50%; /* 警示橙：#FF7D00 */
+    --tech-cyan: 180 100% 50%; /* 科技青：#00CCFF */
+    --tech-purple: 250 100% 60%; /* 点缀紫：#7B61FF */
   }
 
-  .dark {
-    /* === Dark Theme — warm charcoal, matches orange brand === */
-    --background: 24 8% 10%;
-    --foreground: 30 15% 88%;
-    --card: 24 8% 14%;
-    --card-foreground: 30 15% 88%;
-    --popover: 24 8% 14%;
-    --popover-foreground: 30 15% 88%;
-    /* Keep the same warm orange as primary */
-    --primary: 24 88% 52%;
+  .light {
+    /* === Light Theme — New Color Scheme === */
+    --background: 0 0% 100%; /* 页面背景：#FFFFFF */
+    --foreground: 12 8% 15%; /* 标题文字：#111827 */
+    --card: 0 0% 98%; /* 卡片背景：#F9FAFB */
+    --card-foreground: 12 8% 15%; /* 标题文字：#111827 */
+    --popover: 0 0% 98%; /* 卡片背景：#F9FAFB */
+    --popover-foreground: 12 8% 15%; /* 标题文字：#111827 */
+    /* Main colors */
+    --primary: 214 100% 50%; /* 主色：#0078FF */
     --primary-foreground: 0 0% 100%;
-    --secondary: 24 8% 19%;
-    --secondary-foreground: 30 15% 88%;
-    --muted: 24 8% 19%;
-    --muted-foreground: 28 10% 50%;
-    --accent: 24 60% 18%;
-    --accent-foreground: 24 90% 78%;
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 30 15% 88%;
-    --border: 24 8% 18%;
-    --input: 24 8% 22%;
-    --ring: 24 88% 52%;
-    /* Sidebar — slightly deeper warm charcoal */
-    --sidebar-bg: 24 10% 8%;
-    --sidebar-fg: 30 12% 80%;
-    --sidebar-muted: 28 8% 45%;
-    --sidebar-active-bg: 24 60% 18%;
-    --sidebar-active-fg: 24 88% 76%;
-    --sidebar-hover-bg: 24 8% 15%;
-    --sidebar-border: 24 8% 16%;
-    --sidebar-section-label: 28 8% 38%;
-    --sidebar-edge-shadow: 3px 0 20px rgba(0, 0, 0, 0.4);
-    --sidebar-glass-opacity: 0.88;
-    /* Glass shadows */
-    --shadow-up:    0 -6px 24px rgba(0,0,0,0.30), 0 -1px 4px rgba(0,0,0,0.20);
-    --shadow-down:  0  6px 24px rgba(0,0,0,0.30), 0  1px 4px rgba(0,0,0,0.20);
-    --shadow-right: 6px 0  24px rgba(0,0,0,0.35), 1px 0  4px rgba(0,0,0,0.22);
-    --shadow-card:  0  2px 12px rgba(0,0,0,0.25), 0  1px  3px rgba(0,0,0,0.18);
+    --secondary: 214 100% 40%; /* 深蓝 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 214 100% 96%; /* 浅蓝底色：#E6F4FF */
+    --muted-foreground: 20 5% 45%; /* 次要文字：#6B7280 */
+    --accent: 214 100% 60%; /* 亮蓝：#3399FF */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 18% 85%; /* 边框 / 分割线：#D1D5DB */
+    --input: 210 20% 88%;
+    --ring: 214 100% 50%; /* 主色：#0078FF */
+    --radius: 0.625rem;
+    /* Sidebar */
+    --sidebar-bg: 214 100% 98%;
+    --sidebar-fg: 12 8% 15%; /* 标题文字：#111827 */
+    --sidebar-muted: 20 5% 45%; /* 次要文字：#6B7280 */
+    --sidebar-active-bg: 214 100% 95%;
+    --sidebar-active-fg: 214 100% 50%; /* 主色：#0078FF */
+    --sidebar-hover-bg: 214 100% 94%;
+    --sidebar-border: 210 18% 85%; /* 边框 / 分割线：#D1D5DB */
+    --sidebar-section-label: 20 5% 45%; /* 次要文字：#6B7280 */
+    --sidebar-edge-shadow: 3px 0 20px rgba(0, 120, 255, 0.1);
+    --sidebar-glass-opacity: 0.95;
+    /* Shadows */
+    --shadow-up:    0 -6px 24px rgba(0, 120, 255, 0.08), 0 -1px 4px rgba(0, 120, 255, 0.04);
+    --shadow-down:  0  6px 24px rgba(0, 120, 255, 0.08), 0  1px 4px rgba(0, 120, 255, 0.04);
+    --shadow-right: 6px 0  24px rgba(0, 120, 255, 0.06), 1px 0  4px rgba(0, 120, 255, 0.03);
+    --shadow-card:  0  2px 16px rgba(0, 120, 255, 0.08), 0  1px  4px rgba(0, 120, 255, 0.04);
+    /* Status colors */
+    --success: 160 100% 45%; /* 成功绿：#00C48C */
+    --warning: 25 100% 50%; /* 警示橙：#FF7D00 */
+    --tech-cyan: 180 100% 50%; /* 科技青：#00CCFF */
+    --tech-purple: 250 100% 60%; /* 点缀紫：#7B61FF */
   }
 }
 
@@ -144,4 +155,118 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-muted-foreground/30;
+}
+
+/* === Tech Dashboard Global Styles === */
+
+/* Background grid pattern */
+.tech-grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 120, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 120, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(0, 120, 255, 0.3), 0 0 40px rgba(0, 120, 255, 0.1);
+}
+
+.glow-border-primary {
+  border: 1px solid rgba(0, 120, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 120, 255, 0.1), inset 0 0 15px rgba(0, 120, 255, 0.05);
+}
+
+/* Glow effects for purple-blue */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(123, 97, 255, 0.3), 0 0 40px rgba(123, 97, 255, 0.1);
+}
+
+/* Glow effects for tech cyan */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 204, 255, 0.3), 0 0 40px rgba(0, 204, 255, 0.1);
+}
+
+/* Tech card style */
+.tech-card {
+  @apply bg-card/80 border border-primary/20 rounded-xl backdrop-blur-sm;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 120, 255, 0.3);
+}
+
+.tech-card:hover {
+  border-color: rgba(0, 120, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 120, 255, 0.15);
+}
+
+/* Tech button */
+.tech-btn-primary {
+  @apply bg-gradient-to-r from-primary to-primary text-white font-semibold;
+  @apply hover:from-primary/90 hover:to-primary/90;
+  @apply shadow-lg shadow-primary/30 hover:shadow-primary/40;
+  @apply transition-all duration-300 rounded-lg;
+}
+
+.tech-btn-secondary {
+  @apply bg-muted/80 border border-primary/30 text-primary-foreground;
+  @apply hover:bg-muted/90 hover:border-primary/50;
+  @apply transition-all duration-200 rounded-lg;
+}
+
+/* Input styles */
+.tech-input {
+  @apply bg-muted/60 border border-primary/30 text-primary-foreground;
+  @apply placeholder:text-primary/40;
+  @apply focus:ring-primary/50 focus:border-primary/60;
+  @apply rounded-lg;
+}
+
+/* Tech accent classes */
+.purple-accent {
+  color: #7B61FF;
+  border-color: #7B61FF;
+}
+
+.cyan-accent {
+  color: #00CCFF;
+  border-color: #00CCFF;
+}
+
+.green-accent {
+  color: #00C48C;
+  border-color: #00C48C;
+}
+
+.orange-accent {
+  color: #FF7D00;
+  border-color: #FF7D00;
+}
+
+/* Top border glow */
+.border-glow-top {
+  position: relative;
+}
+.border-glow-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 120, 255, 0.5), transparent);
+}
+
+/* Status indicators */
+.status-online {
+  @apply bg-emerald-500;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.status-warning {
+  @apply bg-amber-500;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.status-offline {
+  @apply bg-red-500;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
 }

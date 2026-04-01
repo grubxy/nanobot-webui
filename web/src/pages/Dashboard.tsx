@@ -34,32 +34,32 @@ export default function Dashboard() {
       value: loadingChannels ? null : `${runningChannels} / ${totalChannels}`,
       icon: Radio,
       sub: t("dashboard.running"),
-      iconColor: "text-blue-500",
-      iconBg: "bg-blue-50 dark:bg-blue-950/50",
+      iconColor: "text-primary",
+      iconBg: "bg-primary/10 border border-primary/20",
     },
     {
       label: t("dashboard.skills"),
       value: loadingSkills ? null : `${activeSkills}`,
       icon: Wrench,
       sub: t("dashboard.active"),
-      iconColor: "text-sky-500",
-      iconBg: "bg-sky-50 dark:bg-sky-950/50",
+      iconColor: "text-primary",
+      iconBg: "bg-primary/10 border border-primary/20",
     },
     {
       label: t("dashboard.cronJobs"),
       value: loadingCron ? null : `${enabledCron}`,
       icon: Clock,
       sub: t("dashboard.active"),
-      iconColor: "text-amber-500",
-      iconBg: "bg-amber-50 dark:bg-amber-950/50",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/10 border border-amber-500/20",
     },
     {
       label: t("dashboard.sessions"),
       value: loadingSessions ? null : `${totalSessions}`,
       icon: MessageSquare,
       sub: t("dashboard.active"),
-      iconColor: "text-emerald-500",
-      iconBg: "bg-emerald-50 dark:bg-emerald-950/50",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/10 border border-emerald-500/20",
     },
   ];
 
@@ -70,19 +70,19 @@ export default function Dashboard() {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.label} className="overflow-hidden">
+            <Card key={stat.label} className="overflow-hidden dark:bg-card/80 dark:border-border dark:hover:border-border light:bg-white light:border-border light:hover:border-border backdrop-blur-sm transition-colors">
               <CardContent className="p-3 sm:p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-xs font-medium text-muted-foreground leading-snug truncate">{stat.label}</p>
+                    <p className="text-xs font-medium dark:text-white/90 light:text-foreground leading-snug truncate">{stat.label}</p>
                     {stat.value === null ? (
                       <Skeleton className="mt-1.5 h-7 w-12" />
                     ) : (
-                      <div className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">{stat.value}</div>
+                      <div className="mt-1 text-xl font-bold tracking-tight sm:text-2xl dark:text-white light:text-foreground">{stat.value}</div>
                     )}
-                    <p className="mt-0.5 text-xs text-muted-foreground">{stat.sub}</p>
+                    <p className="mt-0.5 text-xs dark:text-white/60 light:text-muted-foreground">{stat.sub}</p>
                   </div>
-                  <div className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", stat.iconBg)}>
+                  <div className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-lg backdrop-blur-sm", stat.iconBg)}>
                     <Icon className={cn("h-4 w-4", stat.iconColor)} />
                   </div>
                 </div>
@@ -93,10 +93,10 @@ export default function Dashboard() {
       </div>
 
       {/* Channel cards */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between px-3 py-2.5 sm:px-6 sm:pb-3">
-          <CardTitle className="text-sm sm:text-base">{t("dashboard.channels")}</CardTitle>
-          <Link to="/channels" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+      <Card className="bg-card/80 border-border/30 backdrop-blur-sm">
+        <CardHeader className="flex flex-row items-center justify-between px-3 py-2.5 sm:px-6 sm:pb-3 border-b border-border/40">
+          <CardTitle className="text-sm sm:text-base text-foreground">{t("dashboard.channels")}</CardTitle>
+          <Link to="/channels" className="text-xs text-accent/80 hover:text-accent transition-colors">
             {t("dashboard.manageChannels")}
           </Link>
         </CardHeader>
@@ -104,7 +104,7 @@ export default function Dashboard() {
           {loadingChannels ? (
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
+                <Skeleton key={i} className="h-16 w-full bg-border/50" />
               ))}
             </div>
           ) : !channels || channels.length === 0 ? (
@@ -117,39 +117,43 @@ export default function Dashboard() {
                 return (
                   <div
                     key={ch.name}
-                    className={`rounded-lg border p-3 flex flex-col gap-2 transition-colors ${
+                    className={`rounded-lg border p-3 flex flex-col gap-2 transition-colors backdrop-blur-sm ${
                       hasError
-                        ? "border-destructive/40 bg-destructive/5"
+                        ? "border-red-500/30 bg-red-500/5"
                         : isRunning
-                        ? "border-green-500/30 bg-green-500/5"
-                        : "border-border bg-muted/30"
+                        ? "border-emerald-500/30 bg-emerald-500/5"
+                        : "border-border/50 bg-border/30"
                     }`}
                   >
                     {/* Header row */}
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-mono text-sm font-semibold leading-tight break-all">{t(`channels.names.${ch.name}`, { defaultValue: ch.name })}</span>
+                      <span className="font-mono text-sm font-semibold leading-tight break-all text-foreground">{t(`channels.names.${ch.name}`, { defaultValue: ch.name })}</span>
                       {hasError ? (
-                        <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                        <AlertCircle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
                       ) : isRunning ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
                       ) : (
-                        <XCircle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                        <XCircle className="h-4 w-4 text-accent shrink-0 mt-0.5" />
                       )}
                     </div>
 
                     {/* Status badges */}
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <Badge variant={ch.enabled ? "default" : "secondary"} className="text-xs px-1.5 py-0">
+                      <Badge variant={ch.enabled ? "default" : "secondary"} className={`text-xs px-1.5 py-0 ${
+                        ch.enabled 
+                          ? "bg-accent/20 text-foreground border border-accent/30" 
+                          : "bg-border/50 text-muted-foreground"
+                      }`}>
                         {ch.enabled ? t("channels.enabled") : t("channels.disabled")}
                       </Badge>
                       {hasError ? (
-                        <Badge variant="destructive" className="text-xs px-1.5 py-0">
+                        <Badge variant="destructive" className="text-xs px-1.5 py-0 bg-red-500/20 border border-red-500/30">
                           {t("dashboard.error")}
                         </Badge>
                       ) : (
                         <Badge
                           variant={isRunning ? "default" : "secondary"}
-                          className={`text-xs px-1.5 py-0 ${isRunning ? "bg-green-500 hover:bg-green-600 text-white" : ""}`}
+                          className={`text-xs px-1.5 py-0 ${isRunning ? "bg-emerald-500/20 hover:bg-emerald-500/30 text-foreground border border-emerald-500/30" : "bg-border/50 text-muted-foreground"}`}
                         >
                           {isRunning ? t("dashboard.running") : t("dashboard.stopped")}
                         </Badge>
@@ -158,7 +162,7 @@ export default function Dashboard() {
 
                     {/* Error message */}
                     {hasError && (
-                      <p className="text-xs text-destructive leading-tight line-clamp-2">{ch.error}</p>
+                      <p className="text-xs text-red-400/80 leading-tight line-clamp-2">{ch.error}</p>
                     )}
                   </div>
                 );

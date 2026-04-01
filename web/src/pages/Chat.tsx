@@ -181,7 +181,7 @@ export default function Chat() {
         {/* Header row — desktop only; mobile title is hidden, FAB used instead */}
         {!isMobile && (
           <div className="flex shrink-0 items-center justify-between px-3 py-2">
-            <span className="text-sm font-semibold">{t("chat.sessions")}</span>
+            <span className="text-sm font-semibold text-foreground">{t("chat.sessions")}</span>
             <button
               onClick={newChat}
               title={t("chat.newChat")}
@@ -232,8 +232,8 @@ export default function Chat() {
                     "group relative flex cursor-pointer items-center gap-3 rounded-xl transition-colors",
                     isMobile ? "px-3 py-3" : "px-2 py-1.5",
                     active
-                      ? "bg-orange-100 text-orange-900 dark:bg-orange-900/40 dark:text-orange-100"
-                      : "hover:bg-muted/60"
+                      ? "dark:bg-orange-900/40 dark:text-orange-100 light:bg-orange-50 light:text-orange-900"
+                      : "dark:hover:bg-muted/60 light:hover:bg-muted"
                   )}
                   onClick={() => switchSession(s.key)}
                 >
@@ -251,13 +251,14 @@ export default function Chat() {
                     <div className="flex items-baseline justify-between gap-1">
                       <span className={cn(
                         "truncate font-medium leading-snug",
-                        isMobile ? "text-sm" : "text-xs"
+                        isMobile ? "text-sm" : "text-xs",
+                        "dark:text-foreground light:text-foreground"
                       )}>
                         {label}
                       </span>
                       <span className={cn(
                         "shrink-0 text-[10px] leading-snug",
-                        active ? "text-orange-600 dark:text-orange-300" : "text-muted-foreground/70"
+                        active ? "text-orange-600 dark:text-orange-300" : "dark:text-muted-foreground/70 light:text-muted-foreground"
                       )}>
                         {formatDate(s.updated_at)}
                       </span>
@@ -265,7 +266,7 @@ export default function Chat() {
                     <p className={cn(
                       "mt-0.5 truncate leading-snug",
                       isMobile ? "text-xs" : "text-[10px]",
-                      active ? "text-orange-700 dark:text-orange-200" : "text-muted-foreground"
+                      active ? "text-orange-700 dark:text-orange-200" : "dark:text-muted-foreground light:text-muted-foreground"
                     )}>
                       {sessionBusy ? (
                         <span className="inline-flex items-center gap-1">
@@ -274,7 +275,7 @@ export default function Chat() {
                             <span className="h-1 w-1 rounded-full bg-primary animate-bounce [animation-delay:150ms]" />
                             <span className="h-1 w-1 rounded-full bg-primary animate-bounce [animation-delay:300ms]" />
                           </span>
-                          <span className="text-primary/70">Processing…</span>
+                          <span className="dark:text-primary/70 light:text-primary">Processing…</span>
                         </span>
                       ) : (s.last_message || "—")}
                     </p>
